@@ -1,0 +1,21 @@
+pcap do CIC -> dataset NB15 - falta codigo CIC_to_NB15
+pcap do NB15 -> CIC               DONE
+pcap do AB-TRAP(ataques) -> CIC   DONE
+pcap do AB-TRAP(bonafide) -> CIC [recuperar o cicflowmeter]
+pcap do AB-TRAP(ataques) -> NB15  DONE
+pcap do AB-TRAP(bonafide) -> NB15 [refazendo o bonafide]
+
+PCAP\dataset | NB15 | CIC  |   |
+--------------------------------
+NB15         |  OK  |  OK  |
+CIC          |      |      |
+bonafide     |      |      |
+attack       |  OK  |  OK  |
+
+files:
+- featuresNB15.py(folderName)    -> folderName_NB15.csv
+- featuresCIC.py(folderName)     -> folderName_CIC.csv
+- CIC_labels.py
+
+* check for label repetition (plurals, underscores, synonyms...)
+* check 1_Extract_Features.sh diferent dir
