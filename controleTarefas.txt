@@ -1,15 +1,17 @@
 pcap do CIC -> dataset NB15 - falta codigo CIC_to_NB15
 pcap do NB15 -> CIC               DONE
 pcap do AB-TRAP(ataques) -> CIC   DONE
-pcap do AB-TRAP(bonafide) -> CIC [recuperar o cicflowmeter]
+pcap do AB-TRAP(bonafide) -> CIC  DONE
 pcap do AB-TRAP(ataques) -> NB15  DONE
-pcap do AB-TRAP(bonafide) -> NB15 [refazendo o bonafide]
+pcap do AB-TRAP(bonafide) -> NB15 [otimizar codigo _to_NB15, muito lento]
+read CIC labels to make NB-15 type dataset
+trainTest.py -> pass functions as argument to improve flexibility of code
 
 PCAP\dataset | NB15 | CIC  |   |
 --------------------------------
 NB15         |  OK  |  OK  |
-CIC          |      |      |
-bonafide     |      |      |
+CIC          |      |  OK  |
+bonafide     |      |  OK  |
 attack       |  OK  |  OK  |
 
 files:
@@ -18,4 +20,4 @@ files:
 - CIC_labels.py
 
 * check for label repetition (plurals, underscores, synonyms...)
-* check 1_Extract_Features.sh diferent dir
+* check 1_Extract_Features.sh different dir
