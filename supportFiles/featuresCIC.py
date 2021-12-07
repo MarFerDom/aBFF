@@ -22,14 +22,21 @@ import pandas as pd
 import warnings
 warnings.filterwarnings('ignore')
 
-    
+
+
+## returns flow ID string
+def flowID(dataframe):
+    return dataframe['dst_ip'] + '-' + dataframe['dst_port'].apply(str) + '-' + dataframe['src_ip'] + '-' + dataframe['src_port'].apply(str) + '-' + dataframe['protocol'].apply(str)
+
+
+
 ## get cic.csv, merge/format labels to CIC-IDS dataset.
 def toCIC(labelType, pcapName, filepath):   
     
     print("loading cic.csv..")
     cicfm = pd.read_csv(filepath + "cic.csv", sep=',') # dataset CICFlow Meter
     print("calculating..")
-    cicfm['flow_ID'] = cicfm['dst_ip'] + '-' + cicfm['dst_port'].apply(str) + '-' + cicfm['src_ip'] + '-' + cicfm['src_port'].apply(str) + '-' + cicfm['protocol'].apply(str)
+    cicfm['flow_ID'] = flowID(cicfm)
     #cicfm = cicfm.merge(labels[['srcip','dstip','sport','dport','attack_cat']], how='left',
     #         left_on=['src_ip','dst_ip','src_port','dst_port'],
     #         right_on=['srcip','dstip','sport','dport'])

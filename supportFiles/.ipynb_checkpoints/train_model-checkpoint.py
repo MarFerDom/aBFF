@@ -14,6 +14,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+import datetime
 from joblib import dump
 
 from sklearn.calibration import CalibratedClassifierCV
@@ -48,7 +49,7 @@ datasetType = {0:"_NB15.csv", 1:"_CIC.csv"}
 # pcapType 4: BoT-IoT
 #
 # datasetType 0: UNSW_NB15
-# datasetType 0: CIC-IDS
+# datasetType 1: CIC-IDS
 ##
 pcapTypeNum = 0
 datasetTypeNum = 1
@@ -57,13 +58,67 @@ datasetTypeNum = 1
 maxNumFiles = 48
 filepath = "./dataset/"
 zeroVar = []
+no_overwrite = True # skip existing joblib files, dont overwrite
+scan = False # target class is Scanning\Reconnaissance
+scanOnly = False # remove other attacks from data
+
+# Define ML algorithms
+algorithms = {
+    "MLP" : (MLPClassifier(random_state=17), {
+        "hidden_layer_sizes" : (10, 10),
+    }),
+    "SVM" : (LinearSVC(random_state=17), {}),
+    "KNN" : (KNeighborsClassifier(n_jobs=-1), {
+        "n_neighbors" : [1, 3, 5]
+    }),
+    "XGB" : (XGBClassifier(random_state=17, n_jobs=-1), {}),
+    "NB" : (GaussianNB(), {}),
+    "LR" : (LogisticRegression(random_state=17, n_jobs=-1), {}),
+    "RF" : (RandomForestClassifier(random_state=17, n_jobs=-1), {
+        "n_estimators" : [10, 15, 20],
+        "criterion" : ("gini", "entropy"), 
+        "max_depth": [5, 10],
+        "class_weight": (None, "balanced", "balanced_subsample")
+    }),
+    "DT" : (DecisionTreeClassifier(random_state=17), {
+        "criterion": ("gini", "entropy"), 
+        "max_depth": [5, 10, 15],
+        "class_weight": (None, "balanced")
+    }),
+}
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+## Write zero variance feature names into text file: comma separated, no spaces
+# Uses global pcapTypeNum value
+def zeroVarWrite(ZV):
+    featFile = open("./ML-output/zeroVar{0}.txt".format(pcapType[pcapTypeNum]),"w")
+    featFile.write(",".join(ZV))
+    featFile.close()
+    
+## Read zero variance feature names from text file: comma separated, no spaces
+def zeroVarRead(pcapTypeNum):
+    featFile = open("./ML-output/zeroVar{0}.txt".format(pcapType[pcapTypeNum]),"r")
+    ZV = featFile.read()
+    featFile.close()
+    ZV = ZV.split(",")
+    return ZV
+
+## Get filename from pcap and dataset type numbers
+def getFilename(pcapTypeNum, datasetTypeNum):
+    return pcapType[pcapTypeNum] + datasetType[datasetTypeNum].replace(".csv","")
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 #---------#
 # LOADING #
 #---------#
-# Needs global variables: zeroVar(if [], its value is set), pcapType, datasetType, datasetTypeNum and filepath
-def loadDataset(pcapTypeNum, maxNumFiles):
-    global zeroVar, pcapType, datasetType, datasetTypeNum, filepath
+# Needs global variables: datasetTypeNum and filepath
+#
+## loads data from csv files and format output depending on feature set choice and zero variance variables
+def loadDataset(pcapTypeNum, maxNumFiles, zeroVarTypeNum):
     full_data = pd.DataFrame({}, columns=[])
 
     # Load files of pcapType and datasetType no more than maxNumFiles
@@ -79,56 +134,66 @@ def loadDataset(pcapTypeNum, maxNumFiles):
         df_labeled = pd.read_csv(filepath+"attack"+datasetType[datasetTypeNum], sep=',')
         full_data = pd.concat([full_data, df_labeled])
         full_data = full_data.astype({'Label':'str'})
-        full_data.loc[full_data['Label']=='benign','Label']='BENIGN'
+        #full_data.loc[full_data['Label']=='benign','Label']='BENIGN'
 
+    # Format column names for rogue white spaces
+    formatedColumns = []
+    for x in full_data.columns.values:
+        formatedColumns.append(x.strip())
+    full_data.columns = formatedColumns
+    
     # Print number of flows and attack/bonafide distribution
     if datasetTypeNum == 0:
         columnName = 'Label'
         columnValue = 1
     if datasetTypeNum == 1:
         columnName = 'Label'
-        columnValue = 'BENIGN'
-       
-    #if 'Reconaissansce' in full_data['Label'].unique():
-        
-    
-    examples_bonafide = full_data[full_data[columnName] == columnValue].shape[0]
+        columnValue = 'benign'        
+    examples_bonafide = full_data[full_data[columnName].apply(lambda x: True if x.casefold() == columnValue else False)].shape[0]
+    #examples_bonafide = full_data[full_data[columnName] == columnValue].shape[0]
     total = full_data.shape[0]
-    print('Total examples of {0} with {1:0.2f} of attack and {2:0.2f} bonafide packets'.format(total, (total - examples_bonafide)/total, examples_bonafide/total))
+    print('Total examples of {0} with {1} attacks and {2} bonafide flows'.format(total, total - examples_bonafide, examples_bonafide))
 
     # Print trainDataset informations
     #print(full_data.info())
     #print(full_data.describe())
 
     # check features with zero variance (not useful for learning) and general ID features
-    if zeroVar == []:
+    if zeroVarTypeNum == []:
         zeroVar = full_data.select_dtypes(exclude='object').columns[(full_data.var() == 0).values]
         zeroVar = np.concatenate((zeroVar.values.T, ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip']))
-        #if full_data.columns.isin(zeroVar).any():
-        full_data.drop(columns=zeroVar, axis=1, inplace=True)
-
-        featFile = open("./ML-output/zeroVar"+"{0}.txt".format(pcapType[pcapTypeNum]),"w")
-        featFile.write("{:}".format(zeroVar))
-        featFile.close()
+        zeroVarWrite(zeroVar)
+    else:
+        zeroVar = zeroVarRead(zeroVarTypeNum)
         
+    full_data.drop(columns=zeroVar, axis=1, inplace=True)
     full_data = full_data.fillna(0)
+    full_data.to_csv("./dataset/final/{0}{1}".format(pcapType[pcapTypeNum], datasetType[datasetTypeNum]), index=None, header=True)
     X = full_data.drop(columns = ["Label"])
     y = full_data.Label
     
     #---------------#
     # DEFINE TARGET #
     #---------------#
+    scanTypes = ["reconnaissance", "portscan", "scanning"]
+    # Exclude other attacks from data
+    if scanOnly:
+        temp = X["Label"].apply(lambda x: True if x in targetText else False)
+        X = X[temp]
+        y = y[temp]
     # Define identification scheme
-    y[y=='BENIGN'] = 0
-    y[y!=0] = 1
+    targetText = ["benign"]
+    targetToML = (0, 1)
+    index = 0
+    if scan and pcapTypeNum:
+        targetText = scanTypes
+        index = 1
+    y = y.apply(lambda x: targetToML[index] if x.casefold() in targetText else targetToML[index-1])
     y = y.astype('int32')
     
     return X, y
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-
 
 #---------#
 # RUNNING #
@@ -138,38 +203,14 @@ def runExperiment():
     #----------------------#
     # PREPARE FOR TRAINING #
     #----------------------#
-    # Define ML algorithm, x and y
-    algorithms = {
-        "MLP" : (MLPClassifier(random_state=17), {
-            "hidden_layer_sizes" : (10, 10),
-        }),
-        "SVM" : (LinearSVC(random_state=17), {}),
-        "KNN" : (KNeighborsClassifier(n_jobs=-1), {
-            "n_neighbors" : [1, 3, 5]
-        }),
-        "XGB" : (XGBClassifier(random_state=17, n_jobs=-1), {}),
-        "NB" : (GaussianNB(), {}),
-        "LR" : (LogisticRegression(random_state=17, n_jobs=-1), {}),
-        "RF" : (RandomForestClassifier(random_state=17, n_jobs=-1), {
-            "n_estimators" : [10, 15, 20],
-            "criterion" : ("gini", "entropy"), 
-            "max_depth": [5, 10],
-            "class_weight": (None, "balanced", "balanced_subsample")
-        }),
-        "DT" : (DecisionTreeClassifier(random_state=17), {
-            "criterion": ("gini", "entropy"), 
-            "max_depth": [5, 10, 15],
-            "class_weight": (None, "balanced")
-        }),
-    }
 
     # Load training set
-    X, y = loadDataset(pcapTypeNum, maxNumFiles)
+    X, y = loadDataset(pcapTypeNum, maxNumFiles, [])
 
     #----------#
     # TRAINING #
     #----------#
-    filename = pcapType[pcapTypeNum] + datasetType[datasetTypeNum]
+    filename = getFilename(pcapTypeNum, datasetTypeNum)
     #kf = StratifiedKFold(n_splits=10, shuffle=True, random_state=17) # Train, Test
     gskf = StratifiedKFold(n_splits=10, shuffle=True, random_state=17) # Validation
     perf = f1_score
@@ -179,18 +220,22 @@ def runExperiment():
     prep.fit(X)
     dump(prep, open('models/{0}_prep.pkl'.format(filename), 'wb'))
     #result = {'expected': [], 'predicted': []}
-    for algorithm, (clf, parameters) in {'DT': algorithms.get('DT')}.items(): #algorithms.items():
+    for algorithm, (clf, parameters) in algorithms.items(): #{'DT': algorithms.get('DT')}.items():
         # file path
-        #filename = 'ML-output/' + algorithm + "_" + pcapType[pcapTypeNum] + datasetType[datasetTypeNum]
-        
+        modelPath = "models/{0}_{1}.joblib".format(filename,algorithm)
+        # if algorithm already trained and KEEP flag set
+        if (os.path.isfile(modelPath)) and no_overwrite:
+            print("{0} not overwriten".format(algorithm))
+            continue
         #for each ML algorithm: train
         print("training " + algorithm + " from " + filename)
+        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
         # F1 score
         #print("Training for F1 score")
         best = GridSearchCV(clf, parameters, cv=gskf, scoring=make_scorer(perf))
         best.fit(prep.transform(X), y)
-        dump(best, "models/{0}_{1}.joblib".format(filename,algorithm))
+        dump(best, modelPath)
 
     
 
@@ -209,7 +254,7 @@ if __name__ == "__main__":
     
     # help
     if len(sys.argv) < 4:
-        print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <DATASET_TYPE> <TRAINING_DATASET>")
+        print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <DATASET_TYPE> <TRAINING_DATASET> [\"KEEP\"] [\"SCAN_ALL\"] [\"SCAN_ONLY\"]")
         print(datasetMSG, pcapType)
         sys.exit()
         
@@ -232,6 +277,19 @@ if __name__ == "__main__":
             print("Invalid dataset type(s): ")
             print(DST_MSG, datasetType)
             sys.exit()
+            
+    if len(sys.argv) > 4:
+        if "KEEP" in sys.argv[4:]:
+            no_overwrite = True
+            print("No Overwrite selected. Skipping ML for existing joblib files")
+        if "SCAN_ALL" in sys.argv[4:]:
+            scan = True # target class is Scanning\Reconnaissance
+            print("Target Class: Scanning\\Reconnaissance selected")
+        elif "SCAN_ONLY" in sys.argv[4:]:
+            scan = True # target class is Scanning\Reconnaissance
+            scanOnly = True # exclude non Scanning\Reconnaissance attacks from data
+            print("Target Class: Scanning\\Reconnaissance selected, exclude other attacks from Benign data")
+            
             
         
     runExperiment()

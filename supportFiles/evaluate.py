@@ -10,11 +10,9 @@
 # Train with trainDataset and test with testDataset list
 #-----------------------------------------------------------------------------------------
 
-import os
-import sys
-import pandas as pd
-import numpy as np
-import datetime
+# verify NB-15 code for string identification NB15_
+
+import myFunc
 from joblib import load
 
 from sklearn.calibration import CalibratedClassifierCV
@@ -37,12 +35,9 @@ warnings.filterwarnings('ignore')
 
 # GLOBAL VARIABLES 
 
-pcapType = {0:"output", 1:"NB15_", 2:"WorkingHours", 3:"ToN-IoT", 4:"BoT-IoT"}
-datasetType = {0:"_NB15.csv", 1:"_CIC.csv"}
-
 ## Select PCAP and dataset types
 #
-# pcapType 0: MAWILab(no attacks) + synthetic attacks
+# pcapType 0: AB-TRAP - MAWILab(no attacks) + synthetic attacks
 # pcapType 1: UNSW_NB15
 # pcapType 2: CIC-IDS
 # pcapType 3: ToN-IoT
@@ -51,81 +46,7 @@ datasetType = {0:"_NB15.csv", 1:"_CIC.csv"}
 # datasetType 0: UNSW_NB15
 # datasetType 0: CIC-IDS
 ##
-pcapTypeNum = 0
-datasetTypeNum = 1
 
-# Select maximum number of files to load
-maxNumFiles = 48
-filepath = "./dataset/"
-zeroVar = []
-no_overwrite = False
-
-#---------#
-# LOADING #
-#---------#
-# Needs global variables: zeroVar(if [], its value is set), pcapType, datasetType, datasetTypeNum and filepath
-def loadDataset(pcapTypeNum, maxNumFiles):
-    global zeroVar, pcapType, datasetType, datasetTypeNum, filepath
-    full_data = pd.DataFrame({}, columns=[])
-
-    # Load files of pcapType and datasetType no more than maxNumFiles
-    files = [s for s in os.listdir(filepath) if (datasetType[datasetTypeNum] in s and pcapType[pcapTypeNum] in s)]
-    maxNumFiles = min(maxNumFiles, len(files))
-    for file in files[0:maxNumFiles]:
-        temp = pd.read_csv(filepath+file, sep=',') 
-        full_data = pd.concat([full_data,temp], ignore_index=True)
-
-    # Create AB-TRAP based dataset with all packets (bonafide and attack)
-    if pcapTypeNum == 0:
-        # Attack dataset
-        df_labeled = pd.read_csv(filepath+"attack"+datasetType[datasetTypeNum], sep=',')
-        full_data = pd.concat([full_data, df_labeled])
-        full_data = full_data.astype({'Label':'str'})
-        full_data.loc[full_data['Label']=='benign','Label']='BENIGN'
-
-    # Print number of flows and attack/bonafide distribution
-    if datasetTypeNum == 0:
-        columnName = 'Label'
-        columnValue = 1
-    if datasetTypeNum == 1:
-        columnName = 'Label'
-        columnValue = 'BENIGN'
-       
-    #if 'Reconaissansce' in full_data['Label'].unique():
-        
-    
-    examples_bonafide = full_data[full_data[columnName] == columnValue].shape[0]
-    total = full_data.shape[0]
-    print('Total examples of {0} with {1:0.2f} of attack and {2:0.2f} bonafide packets'.format(total, (total - examples_bonafide)/total, examples_bonafide/total))
-
-    # Print trainDataset informations
-    #print(full_data.info())
-    #print(full_data.describe())
-
-    # check features with zero variance (not useful for learning) and general ID features
-    if zeroVar == []:
-        zeroVar = full_data.select_dtypes(exclude='object').columns[(full_data.var() == 0).values]
-        zeroVar = np.concatenate((zeroVar.values.T, ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip']))
-        #if full_data.columns.isin(zeroVar).any():
-        full_data.drop(columns=zeroVar, axis=1, inplace=True)
-
-        featFile = open("./ML-output/zeroVar"+"{0}.txt".format(pcapType[pcapTypeNum]),"w")
-        featFile.write("{:}".format(zeroVar))
-        featFile.close()
-        
-    full_data = full_data.fillna(0)
-    X = full_data.drop(columns = ["Label"])
-    y = full_data.Label
-    
-    #---------------#
-    # DEFINE TARGET #
-    #---------------#
-    # Define identification scheme
-    y[y=='BENIGN'] = 0
-    y[y!=0] = 1
-    y = y.astype('int32')
-    
-    return X, y
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -136,42 +57,20 @@ def loadDataset(pcapTypeNum, maxNumFiles):
 # RUNNING #
 #---------#
 # Runs experiment for testSet
-def runExperiment():
-    #----------------------#
-    # PREPARE FOR TRAINING #
-    #----------------------#
-    global no_overwrite
-    # Define ML algorithm, x and y
-    algorithms = {
-        "MLP" : (MLPClassifier(random_state=17), {
-            "hidden_layer_sizes" : (10, 10),
-        }),
-        "SVM" : (LinearSVC(random_state=17), {}),
-        "KNN" : (KNeighborsClassifier(n_jobs=-1), {
-            "n_neighbors" : [1, 3, 5]
-        }),
-        "XGB" : (XGBClassifier(random_state=17, n_jobs=-1), {}),
-        "NB" : (GaussianNB(), {}),
-        "LR" : (LogisticRegression(random_state=17, n_jobs=-1), {}),
-        "RF" : (RandomForestClassifier(random_state=17, n_jobs=-1), {
-            "n_estimators" : [10, 15, 20],
-            "criterion" : ("gini", "entropy"), 
-            "max_depth": [5, 10],
-            "class_weight": (None, "balanced", "balanced_subsample")
-        }),
-        "DT" : (DecisionTreeClassifier(random_state=17), {
-            "criterion": ("gini", "entropy"), 
-            "max_depth": [5, 10, 15],
-            "class_weight": (None, "balanced")
-        }),
-    }
+def runEvaluation():
+    #--------------------#
+    # LOAD BEST ML MODEL #
+    #--------------------#
+    DSName = getDSNem(pNum)
+    best, table = loadModel(modelType)
+    saveTable(DSName, table)
 
     # Load training set
-    X, y = loadDataset(pcapTypeNum, maxNumFiles)
+    X, y = myFunc.loadDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath, [], scan, scanOnly)
 
-    #----------#
-    # TRAINING #
-    #----------#
+    #---------#
+    # TESTING #
+    #---------#
     filename = pcapType[pcapTypeNum] + datasetType[datasetTypeNum].replace(".csv","")
     #kf = StratifiedKFold(n_splits=10, shuffle=True, random_state=17) # Train, Test
     gskf = StratifiedKFold(n_splits=10, shuffle=True, random_state=17) # Validation
