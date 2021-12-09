@@ -16,6 +16,14 @@ import pandas as pd
 import numpy as np
 import datetime
 
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
+from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import LinearSVC
+from sklearn.neighbors import KNeighborsClassifier
 
 # GLOBAL VARIABLES 
 
@@ -40,9 +48,9 @@ algorithms = {
         "hidden_layer_sizes" : (10, 10),
     }),
     "SVM" : (LinearSVC(random_state=17), {}),
-    "KNN" : (KNeighborsClassifier(n_jobs=-1), {
-        "n_neighbors" : [1, 3, 5]
-    }),
+    #"KNN" : (KNeighborsClassifier(n_jobs=-1), {
+    #    "n_neighbors" : [1, 3, 5]
+    #}),
     "XGB" : (XGBClassifier(random_state=17, n_jobs=-1), {}),
     "NB" : (GaussianNB(), {}),
     "LR" : (LogisticRegression(random_state=17, n_jobs=-1), {}),
@@ -59,6 +67,12 @@ algorithms = {
     }),
 }
 
+ID_FEATURES = ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip'] # removed with the zero variance features
+
+alter = {0:"AB-TRAP", 1:"NB15", 2:"CIC-IDS"} # used in file nameing control
+scatag = "SCAN_"                             # used in file nameing control
+atktag = "ATK_"                              # used in file nameing control
+
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -69,17 +83,27 @@ algorithms = {
 ## Write zero variance feature names into text file: comma separated, no spaces
 # Uses global pcapTypeNum value
 def zeroVarWrite(ZV,pcapTypeNum):
-    featFile = open("./ML-output/zeroVar{0}.txt".format(getDSName(pcapTypeNum)),"w")
+    name = "zeroVar{0}.txt".format(getDSName(pcapTypeNum))
+    print("writing file: ".format(name))
+    
+    featFile = open("./ML-output/{0}".format(name),"w")
     featFile.write(",".join(ZV))
     featFile.close()
     
 ## Read zero variance feature names from text file: comma separated, no spaces
 def zeroVarRead(pcapTypeNum):
-    featFile = open("./ML-output/zeroVar{0}.txt".format(getDSName(pcapTypeNum)),"r")
+    name = "zeroVar{0}.txt".format(getDSName(pcapTypeNum))
+    print("reading file: ".format(name))
+    
+    featFile = open("./ML-output/{0}".format(name),"r")
     ZV = featFile.read()
     featFile.close()
     ZV = ZV.split(",")
     return ZV
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 
 #---------------------#
 # FILE NAMING CONTROL #
@@ -90,12 +114,21 @@ def getFilename(pcapTypeNum, datasetTypeNum):
     return pcapType[pcapTypeNum] + datasetType[datasetTypeNum].replace(".csv","")
 
 ## Get data set name from pcap source and feature set type numbers
-def getDSName(pNum, dNum=1):
-    alter = {0:"AB-TRAP" ,1:"NB15" ,2:"CIC-IDS"}
+def getDSName(pNum, dNum=1, scanOnly=False, scan=True):
     name = pcapType[pNum]
-    if pNum in alter.keys():
+    if pNum in alter.columns:
         name = alter[pNum]
+    if scanOnly:
+        # SCAN_ models learned only from scanning attacks
+        name = scatag+name
+    elif not scan:
+        # ATK_ models detect attacks as a single class
+        name = atktag+name
     return name+datasetType[dNum].replace(".csv","")
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 
 #------------------#
 # HELPER FUNCTIONS #
@@ -103,21 +136,21 @@ def getDSName(pNum, dNum=1):
 
 ## Get pcap number options
 def pcapOptions():
-    return pcapType.keys()
+    return pcapType.columns
 
 ## Get feature set number options
 def featureOptions():
-    return datasetType.keys()
+    return datasetType.columns
 
 ## Save LaTex format table of models performance for a given training dataset [update to different tables on same function]
-def saveTable(DSName, table):
-    featFile = open("./dissertation/{0}_F1table.txt".format(DSName),"w")
+def saveTable(table, tableName, caption, label):
+    featFile = open("./dissertation/{0}.tex".format(DSName,tableName),"w")
     featFile.write("""\\begin{table}[H]\n
                     \t\\centering\n
-                    \t\\caption{F1 score of each model in the {0} dataset}\n
-                    \t\\label{tab:f1_valid_abtrap}\n
-                    \t\t{1}\n
-                    \\end{table}""".format(DSName,table.to_latex(index=False, column_format='c'*table.columns.size)))
+                    \t\\caption{{0}}\n
+                    \t\\label{tab:{1}}\n
+                    \t\t{2}\n
+                    \\end{table}""".format(caption, label, table.to_latex(index=False, column_format='c'*table.columns.size)))
     featFile.close()
     
 ## fix for ToN-IoT and BoT-IoT and rogue white spaces
@@ -128,6 +161,33 @@ def standardCICFeatureName(features):
     columns[columns == "label"] = 'Label'
     return columns
 
+
+# builds a table from tests done previously on same feature set and Attacks/Scan Only/Scanning config.
+def buildComparisonTable(scanOnly, scan):
+    filepath = "./ML-output/"
+    files = [s for s in os.listdir(filepath) if 'fscore_' in s]              # only fscore_ files
+    name = "CIC_"
+    if scanOnly:
+        files = [s for s in files if scatag in s]                            # that have SCAN_
+        name = myFunc.scatag + name
+    elif not scan:
+        files = [s for s in files if atktag in s]                            # OR that have ATK_
+        name = myFunc.atktag + name
+    else:
+        files = [s for s in files if (atktag not in s and scatag not in s)]  # OR that have neither
+
+    table = pd.DataFrame()
+    for file in files[0:maxNumFiles]:
+        temp = pd.read_csv(filepath+file, sep=',')
+        table = table.append(temp)
+    table.fillna("-")
+    
+    if not table.empty():
+        saveTable( table, '{0}fCross'.format(name),
+                  'F1 score of each data set\'s best model on other data sets \[ {0}\]'.format(name.replace("_"," ")),
+                  'f1_cross_{0}'.format(name.casefold().replace("_","")) ) 
+
+        
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
@@ -140,6 +200,8 @@ def standardCICFeatureName(features):
 # modelType: name of file .joblib as given by getFilename(pNum, dNum)
 ##
 def loadModel(modelType):
+    print("loading models from {0}".format(modelType))
+    prep = load( './models/{0}_prep.pkl'.format(modelType) )
     files = [s for s in os.listdir("./models/") if ".joblib" in s and modelType in s]
     table = pd.DataFrame({},columns=["model","avg_score","avg_fit_time"])
     bestScore = 0
@@ -153,8 +215,9 @@ def loadModel(modelType):
         if testline["avg_score"] > bestScore:
             bestScore = testline["avg_score"]
             best = teste
+            algo = testline['model']
         table = table.append(testline, ignore_index = True)
-    return (best, table)
+    return (best, prep, table, algo)
 
     
     
@@ -165,11 +228,16 @@ def loadModel(modelType):
 # LOADING DATASET #
 #-----------------#
 
-def loadDataset(pNum, maxNumFiles, dNum, filepath, BUILD=False):
+def loadDataset(pNum, maxNumFiles, dNum, filepath="./dataset/", BUILD=False):
     finalfilepath = "./dataset/final/{0}.csv".format( getDSName(pNum, dNum) )
     if os.path.isfile(finalfilepath) and not BUILD:
         data = pd.read_csv(finalfilepath, sep=',') 
     else:
+        if BUILD:
+            MSG = "BUILD var set"
+        else:
+            MSG = "Not Found"
+        print( "{1}: building {0}.csv".format(getDSName(pNum, dNum), MSG) )
         data = buildDataset(pNum, maxNumFiles, dNum, filepath)
     return data
 
@@ -222,15 +290,22 @@ def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
 
     # check features with zero variance (not useful for learning) and general ID features
     zeroVar = full_data.select_dtypes(exclude='object').columns[(full_data.var() == 0).values]
-    zeroVar = np.concatenate((zeroVar.values.T, ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip']))
+    zeroVar = np.concatenate((zeroVar.values.T, ID_FEATURES))
     zeroVarWrite(zeroVar,pcapTypeNum)         
     
     full_data = full_data.fillna(0)
+    print("saving finalized dataset")
     full_data.to_csv("./dataset/final/{0}.csv".format( getDSName(pcapTypeNum, datasetTypeNum) ), index=None, header=True)
        
     return full_data
 
+
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+#----------------#
+# PREPARE FOR ML #
+#----------------#
 
 def setTarget(full_data, pNum, scanOnly, scan, zeroVarType):
     #---------------#

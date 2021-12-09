@@ -1,21 +1,29 @@
 #----------------------------------------------------------------------------------------
 #
-#                                      trainTestCIC.py
+#                                      evaluate.py
 #
 #
-# Input: trainDataset(${PCAP}_CIC.csv) testDataset(${PCAP}_CIC.csv)[list]
-# Ouput: (${PCAP}_CIC.csv)
+# Input: models(${PCAP}_${FEATURE_SET}_${ML}_.joblib) testDataset(${PCAP}_${FEATURE_SET}.csv)[list]
+# Ouput: a line for performance table in (fscore_${PCAP}_${FEATURE_SET}.csv)
 #
 # Discription:
-# Train with trainDataset and test with testDataset list
+# Test trained models with testDataset list
 #-----------------------------------------------------------------------------------------
 
-# verify NB-15 code for string identification NB15_
+################## TO DO: ################################
+# 1 - verify NB-15 code for string identification NB15_  #
+# 2 - make target list part of command line atttribute   #
+# 3 - improve myFunc.loadModel() function                #
+##########################################################
 
+import os
+import sys
+import pandas as pd
+import numpy as np
+import datetime
+from joblib import dump
 import myFunc
-from joblib import load
 
-from sklearn.calibration import CalibratedClassifierCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
@@ -25,6 +33,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC
 from sklearn.neighbors import KNeighborsClassifier
 
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.preprocessing import StandardScaler#, MinMaxScaler
 from sklearn.model_selection import StratifiedKFold, GridSearchCV, cross_val_predict
 from sklearn.metrics import accuracy_score, make_scorer, f1_score
@@ -51,58 +60,60 @@ warnings.filterwarnings('ignore')
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
-
+# only working with CIC features for now !!!
 
 #---------#
 # RUNNING #
 #---------#
+
 # Runs experiment for testSet
-def runEvaluation():
+def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overwrite=True):
+
     #--------------------#
     # LOAD BEST ML MODEL #
     #--------------------#
-    DSName = getDSNem(pNum)
-    best, table = loadModel(modelType)
-    saveTable(DSName, table)
+    
+    DSName = myFunc.getDSNem(pNum, dNum, scanOnly, scan)    # get data set name
+    scorefile = "./ML-output/fscore_{0}.csv".format(DSName) # from data set's name get model and f1-score file's path
+    best, prep, table, algo = myFunc.loadModel(DSName)
+    myFunc.saveTable( table, '{0}_F1table'.format(DSName),
+                     'F1 score of each model in the {0} dataset'.format(DSName),
+                     'f1_valid_{0}'.format(DSName.casefold()) )                         # Update model performance table for tested data set
 
-    # Load training set
-    X, y = myFunc.loadDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath, [], scan, scanOnly)
-
+    # make target list for testing model
+    targetList = [2, 3, 4]
+    if os.path.isfile(scorefile) and no_overwrite:          # if file already exists, load table
+        print("Found F1-score file for {0} data set".format(DSName))
+        table = pd.read_csv(scorefile, sep=',')
+    else:                                                   # if file doesnt exist, make table
+        print("F1-score file for {0} data set not found. Creating..".format(DSName))
+        table = pd.DataFrame()
+        table.index = [DSName]
+    # remove targets already tested or out of bound
+    targetList = [x for x in targetList and x in myFunc.pcapOptions() and myFunc.getDSName(x, dNum) not in table.columns]
+     
     #---------#
     # TESTING #
     #---------#
-    filename = pcapType[pcapTypeNum] + datasetType[datasetTypeNum].replace(".csv","")
-    #kf = StratifiedKFold(n_splits=10, shuffle=True, random_state=17) # Train, Test
-    gskf = StratifiedKFold(n_splits=10, shuffle=True, random_state=17) # Validation
-    perf = f1_score
-    #perfROC = roc_auc_score
-    prep = StandardScaler() #MinMaxScaler()
-    # Normalize input data for training
-    prep.fit(X)
-    dump(prep, open('models/{0}_prep.pkl'.format(filename), 'wb'))
-    #result = {'expected': [], 'predicted': []}
-    for algorithm, (clf, parameters) in algorithms.items(): #{'DT': algorithms.get('DT')}.items():
-        # file path
-        modelPath = "models/{0}_{1}.joblib".format(filename,algorithm)
-        # if algorithm already trained and KEEP flag set
-        if (os.path.isfile(modelPath)) and no_overwrite:
-            print("{0} not overwriten".format(algorithm))
-            continue
-        #for each ML algorithm: train
-        print("training " + algorithm + " from " + filename)
+    
+    MSG = "Evaluating {0}\'s {1} ML model on ".format(DSName, algo) + "{0} data set"
+    
+    for targetNum in targetList:                            # test model on every target in the list
+        # load target data set
+        tName = myFunc.getDSName(targetNum, dNum)
+        X, y = myFunc.setTarget(myFunc.loadDataset(targetNum, maxNumFiles, dNum), targetNum, scanOnly, scan, pNum)
+        print(MSG.format(tName))
+        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        
+        # calculate f1-score for this target data set
+        table[tName] = best.score(prep.transform(X),y)
+        print("F1-score: {0}".format(table[tName]))
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-        # F1 score
-        #print("Training for F1 score")
-        best = GridSearchCV(clf, parameters, cv=gskf, scoring=make_scorer(perf))
-        best.fit(prep.transform(X), y)
-        dump(best, modelPath)
-
-    
-
-#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX   
+    table.to_csv(scorefile, index=None, header=True) # save F1-score table file
     
     
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
     
     
     
@@ -113,37 +124,49 @@ if __name__ == "__main__":
     datasetMSG = "Datasets available are :\n"
     DST_MSG = "Dataset types available are :\n"
     
+    scanOnly = False
+    scan = False
+    no_overwrite = False
+    
     # help
     if len(sys.argv) < 4:
-        print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <DATASET_TYPE> <TRAINING_DATASET> [\"KEEP\"]")
+        print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <FEATURE_SET> <PCAP_SOURCE> [\"KEEP\"] [\"SCAN_ALL\"] [\"SCAN_ONLY\"]")
         print(datasetMSG, pcapType)
         sys.exit()
         
     if len(sys.argv) > 3:
-        pcapTypeNum = int(sys.argv[3])
-        datasetTypeNum = int(sys.argv[2])
+        pNum = int(sys.argv[3])
+        dNum = int(sys.argv[2])
         maxNumFiles = int(sys.argv[1])
         # check for unknown dataset
-        if pcapTypeNum not in pcapType.keys():
+        if pNum not in myFunc.pcapOptions():
             print("Unknown dataset(s): ")
-            print(datasetMSG, pcapType)
+            print(datasetMSG, myFunc.pcapType)
             sys.exit()
        
         # ToN-IoT and BoT-IoT only available in CIC dataset type
-        if pcapTypeNum in [3, 4]:
-            datasetTypeNum = 1
+        if pNum in [3, 4]:
+            dNum = 1
             print("ToN-IoT and BoT-IoT only available in CIC dataset type")
         # check for invalid types
-        elif (datasetTypeNum not in datasetType.keys()):
+        elif (dNum not in myFunc.featureOptions()):
             print("Invalid dataset type(s): ")
-            print(DST_MSG, datasetType)
+            print(DST_MSG, myFunc.datasetType)
             sys.exit()
             
     if len(sys.argv) > 4:
-        if sys.argv[4] == "KEEP":
+        if "KEEP" in sys.argv[4:]:
             no_overwrite = True
-            
+            print("No Overwrite selected. Skipping data sets already tested")
+        if "SCAN_ALL" in sys.argv[4:]:
+            scan = True # target class is Scanning\Reconnaissance
+            print("Target Class: Scanning\\Reconnaissance selected")
+        elif "SCAN_ONLY" in sys.argv[4:]:
+            scan = True # target class is Scanning\Reconnaissance
+            scanOnly = True # exclude non Scanning\Reconnaissance attacks from data
+            print("Target Class: Scanning\\Reconnaissance selected, exclude other attacks from Benign data")
+                  
         
-    runExperiment()
+    runEvaluation(pNum, maxNumFiles, dNum, scanOnly, scan, no_overwrite)
     
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

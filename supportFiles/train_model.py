@@ -10,10 +10,14 @@
 # Train with trainDataset and test with testDataset list
 #-----------------------------------------------------------------------------------------
 
+import os
+import sys
+import pandas as pd
+import numpy as np
+import datetime
 from joblib import dump
 import myFunc
 
-from sklearn.calibration import CalibratedClassifierCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
@@ -23,6 +27,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC
 from sklearn.neighbors import KNeighborsClassifier
 
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.preprocessing import StandardScaler#, MinMaxScaler
 from sklearn.model_selection import StratifiedKFold, GridSearchCV, cross_val_predict
 from sklearn.metrics import accuracy_score, make_scorer, f1_score
@@ -44,46 +49,48 @@ warnings.filterwarnings('ignore')
 # datasetType 0: UNSW_NB15
 # datasetType 1: CIC-IDS
 ##
-pcapTypeNum = 0
-datasetTypeNum = 1
-
-# Select maximum number of files to load
-maxNumFiles = 48
-filepath = "./dataset/"
-zeroVar = []
-no_overwrite = True # skip existing joblib files, dont overwrite
-scan = False # target class is Scanning\Reconnaissance
-scanOnly = False # remove other attacks from data
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 
 #---------#
 # RUNNING #
 #---------#
 # Runs experiment for all algorithms on chosen dataset and saves as .joblib files
-def runExperiment():
+def runExperiment(pcapTypeNum, maxNumFiles, datasetTypeNum=1, scanOnly=False, scan=True, no_overwrite=True):
     #----------------------#
     # PREPARE FOR TRAINING #
     #----------------------#
 
+    # AB-TRAP has only scanning attacks
+    if pcapTypeNum == 0:
+        scan = True
+    
     # Load training set
-    X, y = myFunc.setTarget(myFunc.loadDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath, []), pcapTypeNum, scanOnly, scan)
+    X, y = myFunc.setTarget(myFunc.loadDataset(pcapTypeNum, maxNumFiles, datasetTypeNum), pcapTypeNum, scanOnly, scan, pcapTypeNum)
 
-    #----------#
-    # TRAINING #
-    #----------#
-    filename = myFunc.getFilename(pcapTypeNum, datasetTypeNum)
+    #--------------#
+    # PRE-TRAINING #
+    #--------------#
+
+    # Standard name is for models detecting scanning attacks with background classes
+    filename = myFunc.getDSName(pcapTypeNum, datasetTypeNum, scanOnly, scan)
+        
     #kf = StratifiedKFold(n_splits=10, shuffle=True, random_state=17) # Train, Test
     gskf = StratifiedKFold(n_splits=10, shuffle=True, random_state=17) # Validation
     perf = f1_score
+    
+    #----------#
+    # TRAINING #
+    #----------#
+    
     #perfROC = roc_auc_score
     prep = StandardScaler() #MinMaxScaler()
     # Normalize input data for training
     prep.fit(X)
     dump(prep, open('models/{0}_prep.pkl'.format(filename), 'wb'))
-    #result = {'expected': [], 'predicted': []}
-    for algorithm, (clf, parameters) in algorithms.items(): #{'DT': algorithms.get('DT')}.items():
+    for algorithm, (clf, parameters) in myFunc.algorithms.items(): #{'DT': algorithms.get('DT')}.items():
         # file path
         modelPath = "models/{0}_{1}.joblib".format(filename,algorithm)
         # if algorithm already trained and KEEP flag set
@@ -114,9 +121,17 @@ if __name__ == "__main__":
     datasetMSG = "Datasets available are :\n"
     DST_MSG = "Dataset types available are :\n"
     
+    pcapTypeNum = 0 # pcap file to use
+    datasetTypeNum = 1 # feature set to use
+    maxNumFiles = 48 # maximum number of files to load
+    
+    #no_overwrite: skip existing joblib files, dont overwrite
+    #scan: target class is Scanning\Reconnaissance
+    #scanOnly: remove other attacks from data
+
     # help
     if len(sys.argv) < 4:
-        print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <DATASET_TYPE> <TRAINING_DATASET> [\"KEEP\"] [\"SCAN_ALL\"] [\"SCAN_ONLY\"]")
+        print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <FEATURE_SET> <PCAP_SOURCE> [\"KEEP\"] [\"SCAN_ALL\" (has precedence)] [\"SCAN_ONLY\"]")
         print(datasetMSG, pcapType)
         sys.exit()
         
@@ -127,7 +142,7 @@ if __name__ == "__main__":
         # check for unknown dataset
         if pcapTypeNum not in myFunc.pcapOptions():
             print("Unknown dataset(s): ")
-            print(datasetMSG, pcapType)
+            print(datasetMSG, myFunc.pcapType)
             sys.exit()
        
         # ToN-IoT and BoT-IoT only available in CIC dataset type
@@ -137,23 +152,29 @@ if __name__ == "__main__":
         # check for invalid types
         elif (datasetTypeNum not in myFunc.featureOptions()):
             print("Invalid dataset type(s): ")
-            print(DST_MSG, datasetType)
+            print(DST_MSG, myFunc.datasetType)
             sys.exit()
             
     if len(sys.argv) > 4:
         if "KEEP" in sys.argv[4:]:
             no_overwrite = True
             print("No Overwrite selected. Skipping ML for existing joblib files")
+        else:
+            no_overwrite = False
+            
         if "SCAN_ALL" in sys.argv[4:]:
             scan = True # target class is Scanning\Reconnaissance
+            scanOnly = False # keep background classes
             print("Target Class: Scanning\\Reconnaissance selected")
         elif "SCAN_ONLY" in sys.argv[4:]:
             scan = True # target class is Scanning\Reconnaissance
             scanOnly = True # exclude non Scanning\Reconnaissance attacks from data
             print("Target Class: Scanning\\Reconnaissance selected, exclude other attacks from Benign data")
-            
-            
+        else:
+            scan = False # all attack classes are targeted
+            scanOnly = False # keep background classes
+                  
         
-    runExperiment()
+    runExperiment(pcapTypeNum, maxNumFiles, datasetTypeNum, scanOnly, scan, no_overwrite)
     
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
