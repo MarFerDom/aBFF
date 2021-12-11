@@ -103,11 +103,15 @@ def runExperiment(pcapTypeNum, maxNumFiles, datasetTypeNum=1, scanOnly=False, sc
 
         # F1 score
         #print("Training for F1 score")
-        best = GridSearchCV(clf, parameters, cv=gskf, scoring=make_scorer(perf))
-        best.fit(prep.transform(X), y)
-        dump(best, modelPath)
+        try:
+            best = GridSearchCV(clf, parameters, cv=gskf, scoring=make_scorer(perf))
+            best.fit(prep.transform(X), y)
+            dump(best, modelPath)
+        except:
+            print("Something went wrong with {0} from {1}".format(algorithm, filename) )
 
-    
+    print("Done!")
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     
@@ -132,7 +136,7 @@ if __name__ == "__main__":
     # help
     if len(sys.argv) < 4:
         print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <FEATURE_SET> <PCAP_SOURCE> [\"KEEP\"] [\"SCAN_ALL\" (has precedence)] [\"SCAN_ONLY\"]")
-        print(datasetMSG, pcapType)
+        print(datasetMSG, myFunc.pcapType)
         sys.exit()
         
     if len(sys.argv) > 3:

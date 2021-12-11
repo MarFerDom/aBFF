@@ -44,6 +44,8 @@ warnings.filterwarnings('ignore')
 
 # GLOBAL VARIABLES 
 
+TARGET_LIST = [2, 3, 4]
+
 ## Select PCAP and dataset types
 #
 # pcapType 0: AB-TRAP - MAWILab(no attacks) + synthetic attacks
@@ -73,24 +75,26 @@ def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overw
     # LOAD BEST ML MODEL #
     #--------------------#
     
-    DSName = myFunc.getDSNem(pNum, dNum, scanOnly, scan)    # get data set name
-    scorefile = "./ML-output/fscore_{0}.csv".format(DSName) # from data set's name get model and f1-score file's path
+    DSName = myFunc.getDSName(pNum, dNum, scanOnly, scan)    # get data set name
+    scorefile = "./dissertation/fscore_{0}.csv".format(DSName) # from data set's name get model and f1-score file's path
     best, prep, table, algo = myFunc.loadModel(DSName)
     myFunc.saveTable( table, '{0}_F1table'.format(DSName),
                      'F1 score of each model in the {0} dataset'.format(DSName),
                      'f1_valid_{0}'.format(DSName.casefold()) )                         # Update model performance table for tested data set
-
+    
     # make target list for testing model
-    targetList = [2, 3, 4]
+    targetList = TARGET_LIST
     if os.path.isfile(scorefile) and no_overwrite:          # if file already exists, load table
         print("Found F1-score file for {0} data set".format(DSName))
         table = pd.read_csv(scorefile, sep=',')
+        if table["ML"] != algo:
+            print("Best algorithm changed! Retest: {:}".format(table.columns.to_list()) )
     else:                                                   # if file doesnt exist, make table
         print("F1-score file for {0} data set not found. Creating..".format(DSName))
-        table = pd.DataFrame()
-        table.index = [DSName]
+        table = pd.DataFrame(index=[DSName])
+        table["ML"] = algo
     # remove targets already tested or out of bound
-    targetList = [x for x in targetList and x in myFunc.pcapOptions() and myFunc.getDSName(x, dNum) not in table.columns]
+    targetList = [x for x in targetList if (x in myFunc.pcapOptions() and myFunc.getDSName(x, dNum) not in table.columns)]
      
     #---------#
     # TESTING #
@@ -106,6 +110,7 @@ def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overw
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         
         # calculate f1-score for this target data set
+        # print('DEBUG :', X)
         table[tName] = best.score(prep.transform(X),y)
         print("F1-score: {0}".format(table[tName]))
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))

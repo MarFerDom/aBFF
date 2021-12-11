@@ -14,6 +14,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+from joblib import dump, load
 import datetime
 
 from sklearn.tree import DecisionTreeClassifier
@@ -54,18 +55,25 @@ algorithms = {
     "XGB" : (XGBClassifier(random_state=17, n_jobs=-1), {}),
     "NB" : (GaussianNB(), {}),
     "LR" : (LogisticRegression(random_state=17, n_jobs=-1), {}),
-    "RF" : (RandomForestClassifier(random_state=17, n_jobs=-1), {
-        "n_estimators" : [10, 15, 20],
-        "criterion" : ("gini", "entropy"), 
-        "max_depth": [5, 10],
-        "class_weight": (None, "balanced", "balanced_subsample")
-    }),
+    #"RF" : (RandomForestClassifier(random_state=17, n_jobs=-1), {
+    #    "n_estimators" : [10, 15, 20],
+    #    "criterion" : ("gini", "entropy"), 
+    #    "max_depth": [5, 10],
+    #    "class_weight": (None, "balanced", "balanced_subsample")
+    #}),
     "DT" : (DecisionTreeClassifier(random_state=17), {
         "criterion": ("gini", "entropy"), 
         "max_depth": [5, 10, 15],
         "class_weight": (None, "balanced")
     }),
 }
+
+ID_FEATURES = ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip'] # removed with the zero variance features
+ALL_ID = ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip', 'dst_port']
+
+alter = {0:"AB-TRAP", 1:"NB15", 2:"CIC-IDS"} # used in file nameing control
+scatag = "SCAN_"                             # used in file nameing control
+atktag = "ATK_"                              # used in file nameing control
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -95,6 +103,10 @@ def zeroVarRead(pcapTypeNum):
     ZV = ZV.split(",")
     return ZV
 
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
 #---------------------#
 # FILE NAMING CONTROL #
 #---------------------#
@@ -105,17 +117,20 @@ def getFilename(pcapTypeNum, datasetTypeNum):
 
 ## Get data set name from pcap source and feature set type numbers
 def getDSName(pNum, dNum=1, scanOnly=False, scan=True):
-    alter = {0:"AB-TRAP", 1:"NB15", 2:"CIC-IDS"}
     name = pcapType[pNum]
-    if pNum in alter.columns:
+    if pNum in alter.keys():
         name = alter[pNum]
     if scanOnly:
         # SCAN_ models learned only from scanning attacks
-        name = "SCAN_"+name
+        name = scatag+name
     elif not scan:
         # ATK_ models detect attacks as a single class
-        name = "ATK_"+name
+        name = atktag+name
     return name+datasetType[dNum].replace(".csv","")
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 
 #------------------#
 # HELPER FUNCTIONS #
@@ -123,23 +138,35 @@ def getDSName(pNum, dNum=1, scanOnly=False, scan=True):
 
 ## Get pcap number options
 def pcapOptions():
-    return pcapType.columns
+    return pcapType.keys()
 
 ## Get feature set number options
 def featureOptions():
-    return datasetType.columns
+    return datasetType.keys()
 
 ## Save LaTex format table of models performance for a given training dataset [update to different tables on same function]
-def saveTable(DSName, table):
-    featFile = open("./dissertation/{0}_F1table.txt".format(DSName),"w")
-    featFile.write("""\\begin{table}[H]\n
-                    \t\\centering\n
-                    \t\\caption{F1 score of each model in the {0} dataset}\n
-                    \t\\label{tab:f1_valid_abtrap}\n
-                    \t\t{1}\n
-                    \\end{table}""".format(DSName,table.to_latex(index=False, column_format='c'*table.columns.size)))
+def saveTable(table, tableName, caption, label):
+    featFile = open("./dissertation/{0}.tex".format(tableName),"w")
+    textLab = "{"+"tab:{0}".format(label)+"}"
+    textCap = "{"+"{0}".format(caption)+"}"
+    featFile.write("""\\begin{3}[H]\n
+                      \\centering\n
+                      \\caption{0}\n
+                      \\label{1}\n\t\t{2}\n\\end{3}""".format(textCap,
+                                                              textLab,
+                                                              table.to_latex(column_format='c'*table.columns.size),
+                                                              "{table}")
+                  )
     featFile.close()
+
     
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+#--------------#
+# LABEL FIXERS #
+#--------------#
+
 ## fix for ToN-IoT and BoT-IoT and rogue white spaces
 def standardCICFeatureName(features):
     #alvo.columns
@@ -148,6 +175,68 @@ def standardCICFeatureName(features):
     columns[columns == "label"] = 'Label'
     return columns
 
+## fix for massive inconsistencies in CIC-IDS2017 feature set
+# helper for sickCICFeatureName()
+def tempoFunc(x):
+    if x.find("seg_size") > 0:
+        x = x.replace("_seg_size", "")+"_seg_size"
+    if x.startswith(("avg_", "min_", "max_")):
+        x = x[4:]+"_"+x[0:3]
+    if x.find("avg") > 0:
+        x = x.replace("_avg","")+"_avg"
+    if x.find("win_byts") > 0:
+        x = x.replace("win_byts_", "")+"_win_byts"
+    if x.find("init") > 0:
+        x = "init_"+x.replace("_init", "")
+    if x.endswith("_fwd"):
+        x = "fwd_"+x[0:-4]
+    else:
+        pass
+    return x
+
+## fix for massive inconsistencies in CIC-IDS2017 feature set
+def sickCICFeatureName(test):
+    test = test.to_series().apply(lambda x: x.strip().replace(" ","_").replace("/", "_").casefold()
+                                            .replace("destination","dst").replace("source", "src").replace("total", "tot")
+                                           .replace("packet", "pkt").replace("length", "len").replace("count","cnt")
+                                           .replace("_of_","_").replace("bytes","byts").replace("backward", "bwd")
+                                           .replace("tot_len", "totlen").replace("average", "avg").replace("variance", "var")
+                                           .replace("segment", "seg").replace("bulk", "b").replace("forward", "fwd")
+                                            .replace("_id", "_ID").replace("lab", "Lab").replace("b_rate", "blk_rate")
+                                           .replace("data_pkt", "data_pkts").replace("cwe_flag_cnt", "cwe_flag_count"))
+    test = [tempoFunc(x) for x in test]
+    return test
+
+    
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+# builds a table from tests done previously on same feature set and Attacks/Scan Only/Scanning config.
+def buildComparisonTable(scanOnly, scan):
+    filepath = "./ML-output/"
+    files = [s for s in os.listdir(filepath) if 'fscore_' in s]              # only fscore_ files
+    name = "CIC_"
+    if scanOnly:
+        files = [s for s in files if scatag in s]                            # that have SCAN_
+        name = myFunc.scatag + name
+    elif not scan:
+        files = [s for s in files if atktag in s]                            # OR that have ATK_
+        name = myFunc.atktag + name
+    else:
+        files = [s for s in files if (atktag not in s and scatag not in s)]  # OR that have neither
+
+    table = pd.DataFrame()
+    for file in files[0:maxNumFiles]:
+        temp = pd.read_csv(filepath+file, sep=',')
+        table = table.append(temp)
+    table.fillna("-")
+    
+    if not table.empty():
+        saveTable( table, '{0}fCross'.format(name),
+                  'F1 score of each data set\'s best model on other data sets \[ {0}\]'.format(name.replace("_"," ")),
+                  'f1_cross_{0}'.format(name.casefold().replace("_","")) ) 
+
+        
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
@@ -161,10 +250,14 @@ def standardCICFeatureName(features):
 ##
 def loadModel(modelType):
     print("loading models from {0}".format(modelType))
-    prep = load( 'models/{0}_prep.pkl'.format(modelType) )
-    files = [s for s in os.listdir("./models/") if ".joblib" in s and modelType in s]
+    prep = load( './models/{0}_prep.pkl'.format(modelType) )
+    files = [s for s in os.listdir("./models/") if ( (".joblib" in s) and (modelType in s) )]
+    if (scatag not in modelType) and (atktag not in modelType):
+        files = [s for s in files if ( (scatag not in s) and (atktag not in s) )]
     table = pd.DataFrame({},columns=["model","avg_score","avg_fit_time"])
     bestScore = 0
+    best = []
+    algo = "ErrorAlgorithm"
     for file in files:
         teste = load('./models/'+file)
         indice = np.where(teste.cv_results_["mean_test_score"] == np.amax(teste.cv_results_["mean_test_score"]))[0][0]
@@ -173,10 +266,13 @@ def loadModel(modelType):
                "avg_score":teste.cv_results_["mean_test_score"][indice],
                "avg_fit_time":teste.cv_results_["mean_fit_time"][indice]}
         if testline["avg_score"] > bestScore:
-            bestScore = testline["avg_score"]
+            bestScore = float(testline["avg_score"])
             best = teste
+            algo = testline['model']
         table = table.append(testline, ignore_index = True)
-    return (best, prep, table)
+    if best == []:
+        print("Error: no model loaded!")
+    return (best, prep, table, algo)
 
     
     
@@ -190,9 +286,14 @@ def loadModel(modelType):
 def loadDataset(pNum, maxNumFiles, dNum, filepath="./dataset/", BUILD=False):
     finalfilepath = "./dataset/final/{0}.csv".format( getDSName(pNum, dNum) )
     if os.path.isfile(finalfilepath) and not BUILD:
+        print( "Loading data set from existing file: {0}.csv".format(getDSName(pNum, dNum)) )
         data = pd.read_csv(finalfilepath, sep=',') 
     else:
-        print("Not Found: building {0}.csv".format( getDSName(pNum, dNum) ))
+        if BUILD:
+            MSG = "BUILD var set"
+        else:
+            MSG = "Not Found"
+        print( "{1}: building {0}.csv".format(getDSName(pNum, dNum), MSG) )
         data = buildDataset(pNum, maxNumFiles, dNum, filepath)
     return data
 
@@ -207,6 +308,8 @@ def loadDataset(pNum, maxNumFiles, dNum, filepath="./dataset/", BUILD=False):
 ## filepath: Path to dataset repository from step 2
 ###
 
+# pcapType = {0:"output", 1:"NB15_", 2:"WorkingHours", 3:"ToN-IoT", 4:"BoT-IoT"}
+
 def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
     full_data = pd.DataFrame({}, columns=[])
 
@@ -216,19 +319,29 @@ def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
     for file in files[0:maxNumFiles]:
         temp = pd.read_csv(filepath+file, sep=',') 
         full_data = pd.concat([full_data,temp], ignore_index=True)
-
+    
     # Create AB-TRAP based dataset with all packets (bonafide and attack)
     if pcapTypeNum == 0:
         # Attack dataset
-        df_labeled = pd.read_csv(filepath+"attack"+datasetType[datasetTypeNum], sep=',')
-        full_data = pd.concat([full_data, df_labeled])
+        temp = pd.read_csv(filepath+"attack"+datasetType[datasetTypeNum], sep=',')
+        full_data = pd.concat([full_data, temp])
         full_data = full_data.astype({'Label':'str'})
         #full_data.loc[full_data['Label']=='benign','Label']='BENIGN'
 
+    elif pcapTypeNum == 2:
+        full_data.columns = sickCICFeatureName(full_data.columns)
+        full_data.drop(['fwd_header_len.1'], axis = 1, inplace = True)
     
     # fix for ToN-IoT and BoT-IoT name divergence and rogue white spaces [CIC feature set]
     if datasetTypeNum == 1:
         full_data.columns = standardCICFeatureName(full_data.columns)
+    
+    full_data.drop(full_data[full_data[ALL_ID].isna().any(axis=1)].index, axis = 0, inplace = True)
+    full_data.drop(full_data[(full_data == np.inf).any(axis=1)].index, axis = 0, inplace = True)
+    full_data = full_data.fillna(0)
+    
+    full_data["dst_port"] = full_data["dst_port"].apply(float)
+    full_data = full_data.astype({"dst_port":"int32"})
     
     # Print number of flows and attack/bonafide distribution
     if datasetTypeNum == 0:
@@ -236,23 +349,24 @@ def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
         columnName = 'Label'
         columnValue = 0
     if datasetTypeNum == 1:
-        # if NB15 feature set: data['Label'] == 'benign'
+        # if CIC feature set: data['Label'] == 'benign'
         columnName = 'Label'
-        columnValue = 'benign'        
+        columnValue = 'benign'
+    #print( "DEBUG: ", full_data[columnName].unique() )#apply(lambda x: x.casefold()) )
     examples_bonafide = full_data[full_data[columnName].apply(lambda x: True if x.casefold() == columnValue else False)].shape[0] #examples_bonafide = full_data[full_data[columnName] == columnValue].shape[0]
     total = full_data.shape[0]
     print('Total examples of {0} with {1} attacks and {2} bonafide flows'.format(total, total - examples_bonafide, examples_bonafide))
 
     # check features with zero variance (not useful for learning) and general ID features
     zeroVar = full_data.select_dtypes(exclude='object').columns[(full_data.var() == 0).values]
-    zeroVar = np.concatenate((zeroVar.values.T, ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip']))
+    zeroVar = np.concatenate((zeroVar.values.T, ID_FEATURES))
     zeroVarWrite(zeroVar,pcapTypeNum)         
     
-    full_data = full_data.fillna(0)
     print("saving finalized dataset")
     full_data.to_csv("./dataset/final/{0}.csv".format( getDSName(pcapTypeNum, datasetTypeNum) ), index=None, header=True)
        
     return full_data
+
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 

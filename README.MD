@@ -14,6 +14,17 @@ attacks and traffic occur separatedly in time.
 UNSW-NB15 label file NUSW-NB15_GT.csv is provided by the pcap source.
 CIC-IDS2017 label files in GeneratedLabelledFlows.zip are provided by the pcap source.
 
+# PCAPs
+ Some packet capture files used/generated during aBFF development
+
+* Original MAWILab pcap files extracted from: http://www.fukuda-lab.org/mawilab/
+
+R. Fontugne, P. Borgnat, P. Abry, K. Fukuda. "MAWILab: Combining diverse anomaly detectors for automated anomaly labeling and performance benchmarking". ACM CoNEXT 2010. Philadelphia, PA. December 2010.
+
+* CIC-BoT-IoT and CIC-ToN-IoT extracted from https://staff.itee.uq.edu.au/marius/NIDS_datasets/
+
+M. Sarhan, S. Layeghy, and M. Portmann, An explainable machine learning-based network intrusion detection system for enabling generalisability in securing iot networks, 2021. arXiv:2104.07183 [cs.CR]
+
 ---
 
 # MAIN FILES

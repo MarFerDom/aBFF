@@ -90,7 +90,7 @@ def toCIC(labelType, pcapName, filepath):
                       how='left',
                       left_on=['src_ip', 'dst_ip', 'src_port', 'dst_port', 'protocol'],
                       right_on=['src_ip', 'dst_ip', 'src_port', 'dst_port', 'protocol'])
-        
+        pcapName = "NB15_"+pcapName
         
     cicfm.fillna(value={'Label': 'BENIGN'}, inplace=True)
     
