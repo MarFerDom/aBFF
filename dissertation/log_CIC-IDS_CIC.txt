@@ -1,0 +1,10 @@
+2021-12-11 19:21:00
+Removed 288602 lines of full NaN values
+2021-12-11 19:21:01
+Removed 0 lines of NaN ID values
+2021-12-11 19:21:03
+Removed 2867 lines with infinity valued features
+2021-12-11 19:21:21
+Removed 199 duplicated lines
+2021-12-11 19:21:26
+Total examples of 2827677 with 556555 attacks and 2271122 bonafide flows

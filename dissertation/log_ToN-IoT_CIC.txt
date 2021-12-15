@@ -1,0 +1,40 @@
+2021-12-11 17:59:17
+Removed 0 lines of full NaN values
+2021-12-11 17:59:25
+Removed 0 lines of NaN ID values
+2021-12-11 17:59:40
+Removed 1177 lines with infinity valued features
+2021-12-11 18:01:00
+Removed 0 duplicated lines
+2021-12-11 19:04:42
+Removed 0 lines of full NaN values
+2021-12-11 19:04:46
+Removed 0 lines of NaN ID values
+2021-12-11 19:04:53
+Removed 1177 lines with infinity valued features
+2021-12-11 19:05:35
+Removed 0 duplicated lines
+2021-12-11 19:24:51
+Removed 0 lines of full NaN values
+2021-12-11 19:24:55
+Removed 0 lines of NaN ID values
+2021-12-11 19:25:01
+Removed 1177 lines with infinity valued features
+2021-12-11 19:25:45
+Removed 0 duplicated lines
+2021-12-11 19:26:11
+Total examples of 5350583 with 2836524 attacks and 2514059 bonafide flows
+2021-12-11 23:55:42
+training MLP from ToN-IoT_CIC
+2021-12-12 01:26:50
+training SVM from ToN-IoT_CIC
+2021-12-12 07:53:04
+training XGB from ToN-IoT_CIC
+2021-12-12 12:30:05
+training NB from ToN-IoT_CIC
+2021-12-12 12:32:23
+training LR from ToN-IoT_CIC
+2021-12-12 14:39:05
+training DT from ToN-IoT_CIC
+2021-12-12 17:18:25
+Done!

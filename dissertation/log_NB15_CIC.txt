@@ -1,0 +1,56 @@
+2021-12-11 17:55:06
+Evaluating NB15_CIC's ErrorAlgorithm ML model on AB-TRAP_CIC data set
+2021-12-11 17:55:06
+Something went wrong during trials on AB-TRAP_CIC
+'list' object has no attribute 'score'
+
+2021-12-11 17:56:50
+Evaluating NB15_CIC's ErrorAlgorithm ML model on CIC-IDS_CIC data set
+2021-12-11 17:56:50
+Something went wrong during trials on CIC-IDS_CIC
+'list' object has no attribute 'score'
+
+2021-12-11 19:19:18
+Removed 0 lines of full NaN values
+2021-12-11 19:19:19
+Removed 0 lines of NaN ID values
+2021-12-11 19:19:20
+Removed 0 lines with infinity valued features
+2021-12-11 19:19:27
+Removed 0 duplicated lines
+2021-12-11 19:19:29
+Total examples of 1015781 with 0 attacks and 1015781 bonafide flows
+2021-12-15 01:01:23
+Removed 0 lines of full NaN values
+2021-12-15 01:01:23
+Removed 0 lines of NaN ID values
+2021-12-15 01:01:23
+Removed 0 lines with infinity valued features
+2021-12-15 01:01:23
+Removed 0 duplicated lines
+2021-12-15 01:01:24
+Total examples of 38987 with 2312 attacks and 36675 bonafide flows
+2021-12-15 01:09:07
+Removed 0 lines of full NaN values
+2021-12-15 01:09:07
+Removed 0 lines of NaN ID values
+2021-12-15 01:09:07
+Removed 0 lines with infinity valued features
+2021-12-15 01:09:08
+Removed 0 duplicated lines
+2021-12-15 01:09:08
+Total examples of 38987 with 2312 attacks and 36675 bonafide flows
+2021-12-15 01:09:09
+training MLP from NB15_CIC
+2021-12-15 01:12:06
+training SVM from NB15_CIC
+2021-12-15 01:12:28
+training XGB from NB15_CIC
+2021-12-15 01:13:21
+training NB from NB15_CIC
+2021-12-15 01:13:22
+training LR from NB15_CIC
+2021-12-15 01:14:19
+training DT from NB15_CIC
+2021-12-15 01:14:53
+Done!

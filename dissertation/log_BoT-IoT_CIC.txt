@@ -1,0 +1,14 @@
+2021-12-12 18:18:35
+Removed 0 lines of full NaN values
+2021-12-12 18:43:17
+Removed 0 lines of NaN ID values
+2021-12-12 18:51:10
+Removed 1033 lines with infinity valued features
+2021-12-12 19:10:08
+Removed 0 duplicated lines
+2021-12-12 19:57:50
+Total examples of 13427569 with 13338335 attacks and 89234 bonafide flows
+2021-12-12 20:42:23
+training MLP from BoT-IoT_CIC
+2021-12-13 02:36:00
+training SVM from BoT-IoT_CIC

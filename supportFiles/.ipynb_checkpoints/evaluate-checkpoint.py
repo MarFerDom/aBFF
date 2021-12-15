@@ -4,7 +4,8 @@
 #
 #
 # Input: models(${PCAP}_${FEATURE_SET}_${ML}_.joblib) testDataset(${PCAP}_${FEATURE_SET}.csv)[list]
-# Ouput: a line for performance table in (fscore_${PCAP}_${FEATURE_SET}.csv)
+# Ouput: a line for performance table (fscore_${PCAP}_${FEATURE_SET}.csv),
+#        a table of models performance ${PCAP}_${FEATURE_SET}_F1table.tex
 #
 # Discription:
 # Test trained models with testDataset list
@@ -44,7 +45,7 @@ warnings.filterwarnings('ignore')
 
 # GLOBAL VARIABLES 
 
-TARGET_LIST = [2, 3, 4]
+TARGET_LIST = [0, 1, 2, 3, 4]
 
 ## Select PCAP and dataset types
 #
@@ -94,7 +95,7 @@ def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overw
         table = pd.DataFrame(index=[DSName])
         table["ML"] = algo
     # remove targets already tested or out of bound
-    targetList = [x for x in targetList if (x in myFunc.pcapOptions() and myFunc.getDSName(x, dNum) not in table.columns)]
+    targetList = [x for x in targetList if (x in myFunc.pcapOptions() and myFunc.getDSName(x, dNum) not in table.columns and x != pNum)]
      
     #---------#
     # TESTING #
@@ -106,15 +107,15 @@ def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overw
         # load target data set
         tName = myFunc.getDSName(targetNum, dNum)
         X, y = myFunc.setTarget(myFunc.loadDataset(targetNum, maxNumFiles, dNum), targetNum, scanOnly, scan, pNum)
-        print(MSG.format(tName))
-        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        myFunc.log(DSName, MSG.format(tName))
         
         # calculate f1-score for this target data set
-        print(X)
-        #print(prep.transform(X))
-        table[tName] = best.score(prep.transform(X),y)
-        print("F1-score: {0}".format(table[tName]))
-        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        # print('DEBUG :', X)
+        try:
+            table[tName] = best.score(prep.transform(X),y)
+            myFunc.log(DSName, "F1-score: {0}".format(table[tName]))
+        except Exception as e:
+            myFunc.log(DSName, "Something went wrong during trials on {0}\n".format(tName)+str(e)+"\n")
 
     table.to_csv(scorefile, index=None, header=True) # save F1-score table file
     
@@ -137,7 +138,7 @@ if __name__ == "__main__":
     # help
     if len(sys.argv) < 4:
         print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <FEATURE_SET> <PCAP_SOURCE> [\"KEEP\"] [\"SCAN_ALL\"] [\"SCAN_ONLY\"]")
-        print(datasetMSG, pcapType)
+        print(datasetMSG, myFunc.pcapType)
         sys.exit()
         
     if len(sys.argv) > 3:

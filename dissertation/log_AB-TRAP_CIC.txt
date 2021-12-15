@@ -1,0 +1,41 @@
+2021-12-11 19:02:37
+Evaluating AB-TRAP_CIC's DT ML model on NB15_CIC data set
+2021-12-11 19:02:38
+F1-score: AB-TRAP_CIC    0.0
+Name: NB15_CIC, dtype: float64
+2021-12-11 19:03:25
+Evaluating AB-TRAP_CIC's DT ML model on CIC-IDS_CIC data set
+2021-12-11 19:03:28
+F1-score: AB-TRAP_CIC    0.019547
+Name: CIC-IDS_CIC, dtype: float64
+2021-12-11 19:20:20
+Evaluating AB-TRAP_CIC's DT ML model on NB15_CIC data set
+2021-12-11 19:20:21
+F1-score: AB-TRAP_CIC    0.0
+Name: NB15_CIC, dtype: float64
+2021-12-11 19:23:36
+Evaluating AB-TRAP_CIC's DT ML model on CIC-IDS_CIC data set
+2021-12-11 19:23:39
+F1-score: AB-TRAP_CIC    0.019548
+Name: CIC-IDS_CIC, dtype: float64
+2021-12-11 19:30:13
+Evaluating AB-TRAP_CIC's DT ML model on ToN-IoT_CIC data set
+2021-12-11 19:30:20
+F1-score: AB-TRAP_CIC    0.010248
+Name: ToN-IoT_CIC, dtype: float64
+2021-12-15 01:18:58
+Removed 0 lines of full NaN values
+2021-12-15 01:19:03
+Removed 0 lines of NaN ID values
+2021-12-15 01:23:40
+Removed 0 lines with infinity valued features
+2021-12-15 01:25:00
+Removed 411 duplicated lines
+2021-12-15 01:25:21
+Total examples of 9294376 with 162023 attacks and 9132353 bonafide flows
+2021-12-15 01:29:37
+training MLP from AB-TRAP_CIC
+2021-12-15 03:21:18
+training SVM from AB-TRAP_CIC
+2021-12-15 10:07:00
+training XGB from AB-TRAP_CIC

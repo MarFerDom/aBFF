@@ -48,11 +48,11 @@ algorithms = {
     "MLP" : (MLPClassifier(random_state=17), {
         "hidden_layer_sizes" : (10, 10),
     }),
-    "SVM" : (LinearSVC(random_state=17), {}),
+    #"SVM" : (LinearSVC(random_state=17), {}),
     #"KNN" : (KNeighborsClassifier(n_jobs=-1), {
     #    "n_neighbors" : [1, 3, 5]
     #}),
-    "XGB" : (XGBClassifier(random_state=17, n_jobs=-1), {}),
+    "XGB" : (XGBClassifier(random_state=17, n_jobs=-1,verbosity=0), {}),
     "NB" : (GaussianNB(), {}),
     "LR" : (LogisticRegression(random_state=17, n_jobs=-1), {}),
     #"RF" : (RandomForestClassifier(random_state=17, n_jobs=-1), {
@@ -67,6 +67,27 @@ algorithms = {
         "class_weight": (None, "balanced")
     }),
 }
+
+# for type casting at loading time
+FEATURE_TYPES = {'flow_duration':'int32', 'flow_byts_s':'int32', 'flow_pkts_s':'int32', 'fwd_pkts_s':'int32', 'bwd_pkts_s':'int32',
+                 'fwd_pkt_len_max':'int32', 'fwd_pkt_len_min':'int32', 'bwd_pkt_len_max':'int32', 'bwd_pkt_len_min':'int32',
+                 'flow_iat_max':'int32','flow_iat_min':'int32', 'fwd_iat_tot':'int32', 'fwd_iat_max':'int32', 'fwd_iat_min':'int32', 
+                 'bwd_iat_tot':'int32', 'bwd_iat_max':'int32','bwd_iat_min':'int32', 'active_max':'int32', 'active_min':'int32',
+                 'idle_max':'int32', 'idle_min':'int32', 'protocol':'int32','tot_fwd_pkts':'int32','tot_bwd_pkts':'int32', 
+                 'totlen_fwd_pkts':'int32', 'totlen_bwd_pkts':'int32','pkt_len_max':'int32', 'pkt_len_min':'int32','fwd_header_len':'int32', 
+                 'bwd_header_len':'int32','fwd_seg_size_min':'int32', 'fwd_act_data_pkts':'int32', 'fwd_psh_flags':'int32', 
+                 'bwd_psh_flags':'int32','fwd_urg_flags':'int32','bwd_urg_flags':'int32', 'fin_flag_cnt':'int32',
+                  'syn_flag_cnt':'int32', 'rst_flag_cnt':'int32','psh_flag_cnt':'int32', 'ack_flag_cnt':'int32','urg_flag_cnt':'int32',
+                  'ece_flag_cnt':'int32','init_fwd_win_byts':'int32','init_bwd_win_byts':'int32', 'cwe_flag_count':'int32', 
+                 'subflow_fwd_pkts':'int32','subflow_bwd_pkts':'int32','subflow_fwd_byts':'int32', 'subflow_bwd_byts':'int32', 
+                 'src_port':'int32','dst_port':'int32','fwd_pkt_len_mean':'float32','fwd_pkt_len_std':'float32', 'bwd_pkt_len_mean':'float32',
+                 'bwd_pkt_len_std':'float32', 'pkt_len_mean':'float32', 
+                  'pkt_len_std':'float32','pkt_len_var':'float32','flow_iat_mean':'float32','flow_iat_std':'float32', 'fwd_iat_mean':'float32',
+                  'fwd_iat_std':'float32','bwd_iat_mean':'float32','bwd_iat_std':'float32','down_up_ratio':'float32', 'pkt_size_avg':'float32', 
+                  'active_mean':'float32','active_std':'float32','idle_mean':'float32','idle_std':'float32', 'fwd_byts_b_avg':'float32',
+                  'fwd_pkts_b_avg':'float32', 'bwd_byts_b_avg':'float32','bwd_pkts_b_avg':'float32','fwd_blk_rate_avg':'float32', 
+                 'bwd_blk_rate_avg':'float32','fwd_seg_size_avg':'float32','bwd_seg_size_avg':'float32','src_ip':'string', 'dst_ip':'string',
+                 'timestamp':'string', 'flow_ID':'string', 'Label':'string'}
 
 ID_FEATURES = ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip'] # removed with the zero variance features
 ALL_ID = ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip', 'dst_port']
@@ -84,6 +105,8 @@ atktag = "ATK_"                              # used in file nameing control
 
 ## Write zero variance feature names into text file: comma separated, no spaces
 # Uses global pcapTypeNum value
+
+# TO_DO: Add misssing dNum, scanOnly and scan variables for other feature sets and attack classes
 def zeroVarWrite(ZV,pcapTypeNum):
     name = "zeroVar{0}.txt".format(getDSName(pcapTypeNum))
     print("writing file: ".format(name))
@@ -120,10 +143,10 @@ def getDSName(pNum, dNum=1, scanOnly=False, scan=True):
     name = pcapType[pNum]
     if pNum in alter.keys():
         name = alter[pNum]
-    if scanOnly:
+    if scanOnly and pNum:
         # SCAN_ models learned only from scanning attacks
         name = scatag+name
-    elif not scan:
+    elif not scan and pNum:
         # ATK_ models detect attacks as a single class
         name = atktag+name
     return name+datasetType[dNum].replace(".csv","")
@@ -138,7 +161,8 @@ def getDSName(pNum, dNum=1, scanOnly=False, scan=True):
 
 ## Log data set information
 def log(DSName, info):
-    logFile = open("./dissertation/log_{0}.txt".format(DSName),"w")
+    info = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\n"+info+"\n"
+    logFile = open("./dissertation/log_{0}.txt".format(DSName),"a")
     logFile.write(info)
     logFile.close()
     print(info)
@@ -191,7 +215,7 @@ def tempoFunc(x):
         x = x[4:]+"_"+x[0:3]
     if x.find("avg") > 0:
         x = x.replace("_avg","")+"_avg"
-    if x.find("win_byts") > 0:
+    if x.find("win_byts_") > 0:
         x = x.replace("win_byts_", "")+"_win_byts"
     if x.find("init") > 0:
         x = "init_"+x.replace("_init", "")
@@ -236,7 +260,7 @@ def buildComparisonTable(scanOnly, scan):
     for file in files[0:maxNumFiles]:
         temp = pd.read_csv(filepath+file, sep=',')
         table = table.append(temp)
-    table.fillna("-")
+    table.fillna("-", inplace=True)
     
     if not table.empty():
         saveTable( table, '{0}fCross'.format(name),
@@ -272,7 +296,7 @@ def loadModel(modelType):
         testline = {"model":file.replace(".joblib","").rsplit("_")[2],
                "avg_score":teste.cv_results_["mean_test_score"][indice],
                "avg_fit_time":teste.cv_results_["mean_fit_time"][indice]}
-        if testline["avg_score"] > bestScore:
+        if testline["avg_score"] >= bestScore:
             bestScore = float(testline["avg_score"])
             best = teste
             algo = testline['model']
@@ -294,7 +318,7 @@ def loadDataset(pNum, maxNumFiles, dNum, filepath="./dataset/", BUILD=False):
     finalfilepath = "./dataset/final/{0}.csv".format( getDSName(pNum, dNum) )
     if os.path.isfile(finalfilepath) and not BUILD:
         print( "Loading data set from existing file: {0}.csv".format(getDSName(pNum, dNum)) )
-        data = pd.read_csv(finalfilepath, sep=',') 
+        data = pd.read_csv(finalfilepath, dtype=FEATURE_TYPES, sep=',') 
     else:
         if BUILD:
             MSG = "BUILD var set"
@@ -318,38 +342,89 @@ def loadDataset(pNum, maxNumFiles, dNum, filepath="./dataset/", BUILD=False):
 # pcapType = {0:"output", 1:"NB15_", 2:"WorkingHours", 3:"ToN-IoT", 4:"BoT-IoT"}
 
 def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
-    full_data = pd.DataFrame({}, columns=[])
+    DSName = getDSName(pcapTypeNum, datasetTypeNum)
+    #full_data = pd.DataFrame({}, columns=[])
+    temp = []
 
     # Load files of pcapType and datasetType no more than maxNumFiles
     files = [s for s in os.listdir(filepath) if (datasetType[datasetTypeNum] in s and pcapType[pcapTypeNum] in s)]
     maxNumFiles = min(maxNumFiles, len(files))
-    for file in files[0:maxNumFiles]:
-        temp = pd.read_csv(filepath+file, sep=',') 
-        full_data = pd.concat([full_data,temp], ignore_index=True)
-    
-    # Create AB-TRAP based dataset with all packets (bonafide and attack)
+    if pcapTypeNum < 2:
+        for file in files[0:maxNumFiles]:
+            temp.append(pd.read_csv(filepath+file, dtype=FEATURE_TYPES, sep=','))
+    elif pcapTypeNum == 2:
+        for file in files[0:maxNumFiles]:
+            temp.append(pd.read_csv(filepath+file,dtype={'Flow ID':'string', ' Source IP':'string', ' Destination IP':'string',
+                                                         ' Timestamp':'string', ' Label':'string'}, encoding='utf-8', sep=','))
+    else:
+        for file in files[0:maxNumFiles]:
+            temp.append(pd.read_csv(filepath+file, sep=','))
+ 
     if pcapTypeNum == 0:
         # Attack dataset
-        temp = pd.read_csv(filepath+"attack"+datasetType[datasetTypeNum], sep=',')
-        full_data = pd.concat([full_data, temp])
-        full_data = full_data.astype({'Label':'str'})
+        temp.append(pd.read_csv(filepath+"attack"+datasetType[datasetTypeNum], dtype=FEATURE_TYPES, sep=','))
+        #temp = pd.read_csv(filepath+file, sep=',') 
+        #full_data = pd.concat([full_data,temp], ignore_index=True)
+    # Create AB-TRAP based dataset with all packets (bonafide and attack)
+    full_data = pd.concat(temp, ignore_index=True)
+        
+        #full_data = full_data.astype({'Label':'str'})
         #full_data.loc[full_data['Label']=='benign','Label']='BENIGN'
 
-    elif pcapTypeNum == 2:
+    if pcapTypeNum == 2:
         full_data.columns = sickCICFeatureName(full_data.columns)
+        #full_data.drop(full_data[full_data.isna().any(axis=1)].index, inplace=True) #[['src_ip', 'src_port', 'dst_ip', 'dst_port', 'protocol']]
         full_data.drop(['fwd_header_len.1'], axis = 1, inplace = True)
-    
+        #full_data.drop(full_data[(full_data == np.inf).any(axis=1)].index, inplace=True)
+        #full_data = full_data.astype(FEATURE_TYPES)
+        #temp.fillna({temp.columns[temp.isna().any()][0]:0}, inplace=True)
+
     # fix for ToN-IoT and BoT-IoT name divergence and rogue white spaces [CIC feature set]
     if datasetTypeNum == 1:
         full_data.columns = standardCICFeatureName(full_data.columns)
     
+    # ToN and BoT have label and attack as in UNSW-NB15 style data set.
+    if pcapTypeNum in [3, 4]:
+        full_data.drop(['Label'], axis = 1, inplace = True)
+        full_data.rename(columns={'attack': 'Label'}, inplace=True)
+        
+    #----------------#
+    # Drop bad flows #
+    #----------------#
+    
+    flowCount = full_data.shape[0]
+    print("Flow count: {0}".format(flowCount))
+    
+    # Drop full NaN lines
+    full_data.drop(full_data[full_data.isna().all(axis=1)].index, axis = 0, inplace = True)
+    log(DSName, "Removed {0} lines of full NaN values".format(flowCount-full_data.shape[0]))
+    flowCount = full_data.shape[0]
+    print("Flow count: {0}".format(flowCount))
+    
+    # Drop ID NaN lines
     full_data.drop(full_data[full_data[ALL_ID].isna().any(axis=1)].index, axis = 0, inplace = True)
+    log(DSName,"Removed {0} lines of NaN ID values".format(flowCount-full_data.shape[0]))
+    flowCount = full_data.shape[0]
+    print("Flow count: {0}".format(flowCount))
+    
+    # Drop infinity valued feature lines
     full_data.drop(full_data[(full_data == np.inf).any(axis=1)].index, axis = 0, inplace = True)
-    full_data = full_data.fillna(0)
+    log(DSName,"Removed {0} lines with infinity valued features".format(flowCount-full_data.shape[0]))
+    flowCount = full_data.shape[0]
+    print("Flow count: {0}".format(flowCount))
+    
+    # Drop duplicated lines
+    full_data.drop(full_data[full_data.duplicated()].index, axis = 0, inplace = True)
+    log(DSName,"Removed {0} duplicated lines".format(flowCount-full_data.shape[0]))
+    flowCount = full_data.shape[0]
+    print("Flow count: {0}".format(flowCount))
+    
+    full_data.fillna(0, inplace=True)
     
     full_data["dst_port"] = full_data["dst_port"].apply(float)
     full_data = full_data.astype({"dst_port":"int32"})
     
+    full_data = full_data.astype(FEATURE_TYPES)
     # Print number of flows and attack/bonafide distribution
     if datasetTypeNum == 0:
         # if NB15 feature set: data['Label'] == 0
@@ -362,15 +437,15 @@ def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
     #print( "DEBUG: ", full_data[columnName].unique() )#apply(lambda x: x.casefold()) )
     examples_bonafide = full_data[full_data[columnName].apply(lambda x: True if x.casefold() == columnValue else False)].shape[0] #examples_bonafide = full_data[full_data[columnName] == columnValue].shape[0]
     total = full_data.shape[0]
-    print('Total examples of {0} with {1} attacks and {2} bonafide flows'.format(total, total - examples_bonafide, examples_bonafide))
+    log(DSName,'Total examples of {0} with {1} attacks and {2} bonafide flows'.format(total, total - examples_bonafide, examples_bonafide))
 
     # check features with zero variance (not useful for learning) and general ID features
-    zeroVar = full_data.select_dtypes(exclude='object').columns[(full_data.var() == 0).values]
+    zeroVar = full_data.select_dtypes(exclude='string').columns[(full_data.var() == 0).values]
     zeroVar = np.concatenate((zeroVar.values.T, ID_FEATURES))
     zeroVarWrite(zeroVar,pcapTypeNum)         
     
     print("saving finalized dataset")
-    full_data.to_csv("./dataset/final/{0}.csv".format( getDSName(pcapTypeNum, datasetTypeNum) ), index=None, header=True)
+    full_data.to_csv("./dataset/final/{0}.csv".format( DSName ), index=None, header=True)
        
     return full_data
 
@@ -381,6 +456,7 @@ def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
 #----------------#
 # PREPARE FOR ML #
 #----------------#
+# TO_DO: Add misssing dNum variable for other feature sets
 
 def setTarget(full_data, pNum, scanOnly, scan, zeroVarType):
     #---------------#
@@ -398,6 +474,7 @@ def setTarget(full_data, pNum, scanOnly, scan, zeroVarType):
         temp = full_data["Label"].apply(lambda x: True if x.casefold() in targetText else False)
         X = X[temp]
         y = y[temp]
+        log(getDSName(pNum, 1, scanOnly, scan),"setTarget: Removed {0} flows from other attack types".format(full_data.shape[0] - X.shape[0]))
     # Define identification scheme
     targetText = ["benign"]
     targetToML = (0, 1)

@@ -1,13 +1,13 @@
 #----------------------------------------------------------------------------------------
 #
-#                                      trainTestCIC.py
+#                                      train_model.py
 #
 #
-# Input: trainDataset(${PCAP}_CIC.csv) testDataset(${PCAP}_CIC.csv)[list]
-# Ouput: (${PCAP}_CIC.csv)
+# Input: trainDataset(${PCAP}_CIC.csv)
+# Ouput: Models(${PCAP}_CIC_${ML}.joblib)
 #
 # Discription:
-# Train with trainDataset and test with testDataset list
+# Train models with trainDataset
 #-----------------------------------------------------------------------------------------
 
 import os
@@ -98,20 +98,18 @@ def runExperiment(pcapTypeNum, maxNumFiles, datasetTypeNum=1, scanOnly=False, sc
             print("{0} not overwriten".format(algorithm))
             continue
         #for each ML algorithm: train
-        print("training " + algorithm + " from " + filename)
-        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
+        myFunc.log(filename, "training " + algorithm + " from " + filename)
+        
         # F1 score
         #print("Training for F1 score")
         try:
             best = GridSearchCV(clf, parameters, cv=gskf, scoring=make_scorer(perf))
             best.fit(prep.transform(X), y)
             dump(best, modelPath)
-        except:
-            print("Something went wrong with {0} from {1}".format(algorithm, filename) )
+        except Exception as e:
+            myFunc.log(filename, "Something went wrong with {0} from {1}\n".format(algorithm, filename)+str(e)+"\n")
 
-    print("Done!")
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    myFunc.log(filename, "Done!")
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     
