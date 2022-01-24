@@ -26,10 +26,35 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC
 from sklearn.neighbors import KNeighborsClassifier
 
-# GLOBAL VARIABLES 
+#-----------#
+# FUNCTIONS #
+#-----------#
 
-pcapType = {0:"output", 1:"NB15_", 2:"WorkingHours", 3:"ToN-IoT", 4:"BoT-IoT"}
-datasetType = {0:"_NB15.csv", 1:"_CIC.csv"}
+# def zeroVarWrite(ZV,pcapTypeNum)
+# def zeroVarRead(pcapTypeNum)
+
+# def getFilename(pcapTypeNum, datasetTypeNum)
+# def getDSName(pNum, dNum=1, scanOnly=False, scan=True)
+
+# def log(DSName, info)
+# def pcapOptions()
+# def featureOptions()
+# def datasetOptions()
+# def saveTable(table, tableName, caption, label)
+
+# def standardCICFeatureName(features)
+# def tempoFunc(x)
+# def sickCICFeatureName(test)
+# def buildComparisonTable(scanOnly, scan)
+
+# def loadModel(modelType)
+# def loadDataset(pNum, maxNumFiles, dNum, filepath="./dataset/", BUILD=False)
+# def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath)
+# def setTarget(full_data, pNum, scanOnly, scan, zeroVarType)
+
+#------------------#
+# GLOBAL VARIABLES #
+#------------------#
 
 ## Select PCAP and dataset types
 #
@@ -42,37 +67,44 @@ datasetType = {0:"_NB15.csv", 1:"_CIC.csv"}
 # datasetType 0: UNSW_NB15
 # datasetType 1: CIC-IDS
 ##
+pcapType = {0:"output", 1:"NB15_", 2:"WorkingHours", 3:"ToN-IoT", 4:"BoT-IoT", 5:"internet"}
+datasetType = {0:"_NB15.csv", 1:"_CIC.csv"}
 
 # Define ML algorithms
-algorithms = {
+
+ALGORITHMS = {
     "MLP" : (MLPClassifier(random_state=17), {
         "hidden_layer_sizes" : (10, 10),
     }),
-    #"SVM" : (LinearSVC(random_state=17), {}),
-    #"KNN" : (KNeighborsClassifier(n_jobs=-1), {
-    #    "n_neighbors" : [1, 3, 5]
-    #}),
+    "SVM" : (LinearSVC(random_state=17), {}),
+    "KNN" : (KNeighborsClassifier(n_jobs=-1), {
+        "n_neighbors" : [1, 3, 5]
+    }),
     "XGB" : (XGBClassifier(random_state=17, n_jobs=-1,verbosity=0), {}),
     "NB" : (GaussianNB(), {}),
     "LR" : (LogisticRegression(random_state=17, n_jobs=-1), {}),
-    #"RF" : (RandomForestClassifier(random_state=17, n_jobs=-1), {
-    #    "n_estimators" : [10, 15, 20],
-    #    "criterion" : ("gini", "entropy"), 
-    #    "max_depth": [5, 10],
-    #    "class_weight": (None, "balanced", "balanced_subsample")
-    #}),
+    "RF" : (RandomForestClassifier(random_state=17, n_jobs=-1), {
+        "n_estimators" : [10, 15, 20],
+        "criterion" : ("gini", "entropy"), 
+        "max_depth": [5, 10],
+        "class_weight": (None, "balanced", "balanced_subsample")
+    }),
     "DT" : (DecisionTreeClassifier(random_state=17), {
         "criterion": ("gini", "entropy"), 
         "max_depth": [5, 10, 15],
         "class_weight": (None, "balanced")
     }),
 }
-
+ALGO_KEYS = ["MLP", "SVM", "XGB", "NB", "LR", "DT", "RF"]
+algorithms = {key: ALGORITHMS[key] for key in ALGO_KEYS}
 # for type casting at loading time
-FEATURE_TYPES = {'flow_duration':'int32', 'flow_byts_s':'int32', 'flow_pkts_s':'int32', 'fwd_pkts_s':'int32', 'bwd_pkts_s':'int32',
+#                'flow_duration':'int32', 'flow_byts_s':'int32', 'flow_pkts_s':'int32', 'fwd_pkts_s':'int32', 'bwd_pkts_s':'int32'
+#                'flow_iat_max':'int32','flow_iat_min':'int32', 'fwd_iat_tot':'int32', 'fwd_iat_max':'int32', 'fwd_iat_min':'int32',
+#                'bwd_iat_tot':'int32', 'bwd_iat_max':'int32','bwd_iat_min':'int32', 'active_max':'int32', 'active_min':'int32',
+FEATURE_TYPES = {'flow_duration':'float32', 'flow_byts_s':'float32', 'flow_pkts_s':'float32', 'fwd_pkts_s':'float32', 'bwd_pkts_s':'float32',
                  'fwd_pkt_len_max':'int32', 'fwd_pkt_len_min':'int32', 'bwd_pkt_len_max':'int32', 'bwd_pkt_len_min':'int32',
-                 'flow_iat_max':'int32','flow_iat_min':'int32', 'fwd_iat_tot':'int32', 'fwd_iat_max':'int32', 'fwd_iat_min':'int32', 
-                 'bwd_iat_tot':'int32', 'bwd_iat_max':'int32','bwd_iat_min':'int32', 'active_max':'int32', 'active_min':'int32',
+                 'flow_iat_max':'float32','flow_iat_min':'float32', 'fwd_iat_tot':'float32', 'fwd_iat_max':'float32', 'fwd_iat_min':'float32', 
+                 'bwd_iat_tot':'int32', 'bwd_iat_max':'int32','bwd_iat_min':'int32', 'active_max':'float32', 'active_min':'float32',
                  'idle_max':'int32', 'idle_min':'int32', 'protocol':'int32','tot_fwd_pkts':'int32','tot_bwd_pkts':'int32', 
                  'totlen_fwd_pkts':'int32', 'totlen_bwd_pkts':'int32','pkt_len_max':'int32', 'pkt_len_min':'int32','fwd_header_len':'int32', 
                  'bwd_header_len':'int32','fwd_seg_size_min':'int32', 'fwd_act_data_pkts':'int32', 'fwd_psh_flags':'int32', 
@@ -96,6 +128,7 @@ alter = {0:"AB-TRAP", 1:"NB15", 2:"CIC-IDS"} # used in file nameing control
 scatag = "SCAN_"                             # used in file nameing control
 atktag = "ATK_"                              # used in file nameing control
 
+#setNames = [x for x in setNames.values]
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -143,7 +176,7 @@ def getDSName(pNum, dNum=1, scanOnly=False, scan=True):
     name = pcapType[pNum]
     if pNum in alter.keys():
         name = alter[pNum]
-    if scanOnly and pNum:
+    if scanOnly:
         # SCAN_ models learned only from scanning attacks
         name = scatag+name
     elif not scan and pNum:
@@ -160,8 +193,8 @@ def getDSName(pNum, dNum=1, scanOnly=False, scan=True):
 #------------------#
 
 ## Log data set information
-def log(DSName, info):
-    info = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\n"+info+"\n"
+def log(DSName, data):
+    info = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\n"+data+"\n"
     logFile = open("./dissertation/log_{0}.txt".format(DSName),"a")
     logFile.write(info)
     logFile.close()
@@ -175,18 +208,19 @@ def pcapOptions():
 def featureOptions():
     return datasetType.keys()
 
+## Get data set options
+def datasetOptions():
+    setNames = pcapType.copy()
+    setNames.update(alter)
+    return setNames
+    #setNames = setNames.values
+    #return {x:setNames[x] for x in range( len(setNames) )}
+
 ## Save LaTex format table of models performance for a given training dataset [update to different tables on same function]
-def saveTable(table, tableName, caption, label):
+def saveTable(table, tableName, mycaption, mylabel):
     featFile = open("./dissertation/{0}.tex".format(tableName),"w")
-    textLab = "{"+"tab:{0}".format(label)+"}"
-    textCap = "{"+"{0}".format(caption)+"}"
-    featFile.write("""\\begin{3}[H]\n
-                      \\centering\n
-                      \\caption{0}\n
-                      \\label{1}\n\t\t{2}\n\\end{3}""".format(textCap,
-                                                              textLab,
-                                                              table.to_latex(column_format='c'*table.columns.size),
-                                                              "{table}")
+    featFile.write(table.to_latex(column_format='c'*table.columns.size, index=False,
+                                  caption=mycaption, label=mylabel, position="H")
                   )
     featFile.close()
 
@@ -244,7 +278,7 @@ def sickCICFeatureName(test):
 
 # builds a table from tests done previously on same feature set and Attacks/Scan Only/Scanning config.
 def buildComparisonTable(scanOnly, scan):
-    filepath = "./ML-output/"
+    filepath = "./dissertation/"
     files = [s for s in os.listdir(filepath) if 'fscore_' in s]              # only fscore_ files
     name = "CIC_"
     if scanOnly:
@@ -257,12 +291,12 @@ def buildComparisonTable(scanOnly, scan):
         files = [s for s in files if (atktag not in s and scatag not in s)]  # OR that have neither
 
     table = pd.DataFrame()
-    for file in files[0:maxNumFiles]:
+    for file in files:#[0:maxNumFiles]:
         temp = pd.read_csv(filepath+file, sep=',')
         table = table.append(temp)
     table.fillna("-", inplace=True)
     
-    if not table.empty():
+    if not table.empty:
         saveTable( table, '{0}fCross'.format(name),
                   'F1 score of each data set\'s best model on other data sets \[ {0}\]'.format(name.replace("_"," ")),
                   'f1_cross_{0}'.format(name.casefold().replace("_","")) ) 
@@ -275,50 +309,120 @@ def buildComparisonTable(scanOnly, scan):
 # LOADING MODELS #
 #----------------#
 
-# Gets best model and table of best performance per model
+## Get available models to test on a target
+def getModelFiles(modelType):
+    files = [s for s in os.listdir("./models/") if ( (".joblib" in s) and (modelType in s) )]
+    if scatag not in modelType:
+        files = [s for s in files if (scatag not in s)]
+    if atktag not in modelType:
+        files = [s for s in files if (atktag not in s)]
+    return files
+
+
+# Gets models and table of best performance per model
 ##
 # modelType: name of file .joblib as given by getFilename(pNum, dNum)
 ##
 def loadModel(modelType):
     print("loading models from {0}".format(modelType))
     prep = load( './models/{0}_prep.pkl'.format(modelType) )
-    files = [s for s in os.listdir("./models/") if ( (".joblib" in s) and (modelType in s) )]
-    if (scatag not in modelType) and (atktag not in modelType):
-        files = [s for s in files if ( (scatag not in s) and (atktag not in s) )]
+    files = getModelFiles(modelType)
     table = pd.DataFrame({},columns=["model","avg_score","avg_fit_time"])
     bestScore = 0
-    best = []
-    algo = "ErrorAlgorithm"
+    models = {}
+    algo = "ErrorNoFiles"
+    print("Models fetched: {0}".format(files))
     for file in files:
-        teste = load('./models/'+file)
-        indice = np.where(teste.cv_results_["mean_test_score"] == np.amax(teste.cv_results_["mean_test_score"]))[0][0]
-        print(indice)
-        testline = {"model":file.replace(".joblib","").rsplit("_")[2],
-               "avg_score":teste.cv_results_["mean_test_score"][indice],
-               "avg_fit_time":teste.cv_results_["mean_fit_time"][indice]}
+        testModel = load('./models/'+file)
+        indice = testModel.best_index_
+        testline = {"model":file.replace(".joblib","").rsplit("_")[-1],
+               "avg_score":testModel.best_score_,
+               "avg_fit_time":testModel.cv_results_["mean_fit_time"][indice]}
+        print("{0}\'s index of best performance: {1}".format(testline['model'], indice))
         if testline["avg_score"] >= bestScore:
             bestScore = float(testline["avg_score"])
-            best = teste
             algo = testline['model']
         table = table.append(testline, ignore_index = True)
-    if best == []:
-        print("Error: no model loaded!")
-    return (best, prep, table, algo)
+        models.update({testline['model']:testModel})
+    if bestScore == 0:
+        algo = "ErrorBestScore"
+    print(algo)
+    return (models, prep, table, algo)
 
     
     
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+def loadAndSet(DSName, zeroVarType):
+    
+    finalfilepath = "./dataset/final/{0}.csv".format( DSName.replace("ATK_","").replace("SCAN_","") )
+    
+    featFile = open("./ML-output/features_{0}.txt".format(getDSName(zeroVarType), "r"))
+    features = featFile.read()
+    featFile.close()
+    features = features.split(", ")
 
+    zeroVar = zeroVarRead(zeroVarType)
+    features = [x for x in features if x not in zeroVar]
+    
+    if os.path.isfile(finalfilepath):
+        print( "Loading data set from existing file: {0}.csv".format( DSName ) )
+        if ("BoT" in DSName) or ("ToN" in DSName):
+            data = pd.read_csv(finalfilepath, sep=',', usecols=features)[features]
+#            data = data.astype(FEATURE_TYPES)
+        else:
+            data = pd.read_csv(finalfilepath, dtype=FEATURE_TYPES, sep=',', usecols=features)[features]
+        y = data.Label    
+        scanTypes = ["reconnaissance", "portscan", "scanning"]
+        # Exclude other attacks from data
+        if scatag in DSName and "AB-TRAP" not in DSName:
+            targetText = scanTypes.copy()
+            targetText.append("benign")
+            temp = data["Label"].apply(lambda x: True if x.casefold() in targetText else False)
+            data = data[temp]
+            y = y[temp]
+        # Define identification scheme
+        targetText = scanTypes.copy()
+        targetValue = 1
+        #targetToML = (0, 1)
+        #index = 1
+        if atktag in DSName or "AB-TRAP" in DSName:
+            targetText = ["benign"]
+            targetValue = 0
+        y = y.apply(lambda x: targetValue if x.casefold() in targetText else (1-targetValue))
+        y = y.astype('int32')
+        
+        data.drop('Label', axis=1, inplace=True)
+        return data, y
+    print("Error: file not found")
+    return {}
+        
 #-----------------#
 # LOADING DATASET #
 #-----------------#
+# TO_DO: None
+
+##
+# Returns Load or builds required data set, fixing labels and removeing bad lines
+#
+# INPUT: pNum        [pcap source number: 0 to 4],
+#        maxNumFiles [maximum number of files to load, int],
+#        dNum        [feature set number: 0 or 1],
+#        filepath    [file's directory path, string],
+#        BUILD       [wether to build regardless, True/False]
+#
+# OUTPUT: data       [full data set]
+##
 
 def loadDataset(pNum, maxNumFiles, dNum, filepath="./dataset/", BUILD=False):
     finalfilepath = "./dataset/final/{0}.csv".format( getDSName(pNum, dNum) )
     if os.path.isfile(finalfilepath) and not BUILD:
         print( "Loading data set from existing file: {0}.csv".format(getDSName(pNum, dNum)) )
-        data = pd.read_csv(finalfilepath, dtype=FEATURE_TYPES, sep=',') 
+        if pNum in [3, 4]:
+            data = pd.read_csv(finalfilepath, sep=',')
+            data = data.astype(FEATURE_TYPES)
+        else:
+            data = pd.read_csv(finalfilepath, dtype=FEATURE_TYPES, sep=',') 
     else:
         if BUILD:
             MSG = "BUILD var set"
@@ -342,14 +446,14 @@ def loadDataset(pNum, maxNumFiles, dNum, filepath="./dataset/", BUILD=False):
 # pcapType = {0:"output", 1:"NB15_", 2:"WorkingHours", 3:"ToN-IoT", 4:"BoT-IoT"}
 
 def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
-    DSName = getDSName(pcapTypeNum, datasetTypeNum)
+    DSName = getDSName(pcapTypeNum, datasetTypeNum) #FINAL DATA SETS CONATIN ALL ATTACK TYPES
     #full_data = pd.DataFrame({}, columns=[])
     temp = []
 
     # Load files of pcapType and datasetType no more than maxNumFiles
     files = [s for s in os.listdir(filepath) if (datasetType[datasetTypeNum] in s and pcapType[pcapTypeNum] in s)]
     maxNumFiles = min(maxNumFiles, len(files))
-    if pcapTypeNum < 2:
+    if pcapTypeNum < 2 or pcapTypeNum == 5:
         for file in files[0:maxNumFiles]:
             temp.append(pd.read_csv(filepath+file, dtype=FEATURE_TYPES, sep=','))
     elif pcapTypeNum == 2:
@@ -360,9 +464,16 @@ def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
         for file in files[0:maxNumFiles]:
             temp.append(pd.read_csv(filepath+file, sep=','))
  
+    # If AB-TRAP LAN or internet
     if pcapTypeNum == 0:
         # Attack dataset
         temp.append(pd.read_csv(filepath+"attack"+datasetType[datasetTypeNum], dtype=FEATURE_TYPES, sep=','))
+    if pcapTypeNum == 5:
+        # Attack dataset
+        files = [s for s in os.listdir(filepath) if (datasetType[datasetTypeNum] in s and pcapType[0] in s)]
+        #maxNumFiles = min(maxNumFiles, len(files)) SORT LATER
+        for file in files[0:96]:
+            temp.append(pd.read_csv(filepath+file, dtype=FEATURE_TYPES, sep=','))
         #temp = pd.read_csv(filepath+file, sep=',') 
         #full_data = pd.concat([full_data,temp], ignore_index=True)
     # Create AB-TRAP based dataset with all packets (bonafide and attack)
@@ -458,6 +569,18 @@ def buildDataset(pcapTypeNum, maxNumFiles, datasetTypeNum, filepath):
 #----------------#
 # TO_DO: Add misssing dNum variable for other feature sets
 
+##
+# Returns X, y for training models
+#
+# INPUT: full_data   [data set as source: DataFrame],
+#        pNum        [pcap source number: 0 to 4],
+#        scanOnly    [remove other attacks: True/False],
+#        scan        [only detect scan attack: True/False],
+#        zeroVarType [zero variance list: 0 to 4]
+#
+# OUTPUT: X          [feature set values per flow],
+#         y          [0 or 1 per flow]
+##
 def setTarget(full_data, pNum, scanOnly, scan, zeroVarType):
     #---------------#
     # DEFINE TARGET #
@@ -470,7 +593,8 @@ def setTarget(full_data, pNum, scanOnly, scan, zeroVarType):
     scanTypes = ["reconnaissance", "portscan", "scanning"]
     # Exclude other attacks from data
     if scanOnly and pNum:
-        targetText = scanTypes.append("benign")
+        targetText = scanTypes.copy()
+        targetText.append("benign")
         temp = full_data["Label"].apply(lambda x: True if x.casefold() in targetText else False)
         X = X[temp]
         y = y[temp]
@@ -479,8 +603,8 @@ def setTarget(full_data, pNum, scanOnly, scan, zeroVarType):
     targetText = ["benign"]
     targetToML = (0, 1)
     index = 0
-    if scan and pNum:
-        targetText = scanTypes
+    if not scanOnly and scan and pNum:
+        targetText = scanTypes.copy()
         index = 1
     y = y.apply(lambda x: targetToML[index] if x.casefold() in targetText else targetToML[index-1])
     y = y.astype('int32')

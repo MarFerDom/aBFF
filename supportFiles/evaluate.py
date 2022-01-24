@@ -45,7 +45,7 @@ warnings.filterwarnings('ignore')
 
 # GLOBAL VARIABLES 
 
-TARGET_LIST = [0, 1, 2, 3, 4]
+TARGET_LIST = [0, 1, 2, 3, 4, 5]
 
 ## Select PCAP and dataset types
 #
@@ -71,6 +71,132 @@ TARGET_LIST = [0, 1, 2, 3, 4]
 
 # Runs experiment for testSet
 def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overwrite=True):
+
+    #--------------------#
+    # LOAD BEST ML MODEL #
+    #--------------------#
+    
+    DSName = myFunc.getDSName(pNum, dNum, scanOnly, scan)    # get data set name
+    scorefile = "./dissertation/fscore_{0}.csv".format(DSName) # from data set's name get model and f1-score file's path
+    modelList, prep, table, algo = myFunc.loadModel(DSName)
+    myFunc.saveTable( table, '{0}_F1table'.format(DSName),
+                     'F1 score of each model in the {0} dataset'.format(DSName),
+                     'f1_valid_{0}'.format(DSName.casefold()) )                         # Update model performance table for tested data set
+    if modelList == {}:
+        print("model list empty")
+    # make target list for testing model
+    targetList = TARGET_LIST
+    if os.path.isfile(scorefile) and no_overwrite:          # if file already exists, load table
+        print("Found F1-score file for {0} data set".format(DSName))
+        table = pd.read_csv(scorefile, sep=',')
+        #if table["ML"] != algo:
+        #    print("Best algorithm changed! Retest: {:}".format(table.columns.to_list()) )
+    else:                                                   # if file doesnt exist, make table
+        print("F1-score file for {0} data set not found. Creating..".format(DSName))
+        table = pd.DataFrame()
+        #table["ML"] = algo
+    # remove targets already tested or out of bound
+    targetList = [x for x in targetList if (x in myFunc.pcapOptions() and x != pNum)] #and myFunc.getDSName(x, dNum) not in table.columns)]
+     
+    #---------#
+    # TESTING #
+    #---------#
+    
+    MSG = "Evaluating {0}\'s ML models on ".format(DSName) + "{0} data set"
+    
+    rows = []
+    for targetNum in targetList:                            # test model on every target in the list
+        # load target data set
+        tName = myFunc.getDSName(targetNum, dNum, scanOnly, scan)
+        X, y = myFunc.loadAndSet(tName, pNum)
+        myFunc.log(DSName, MSG.format(tName))
+        
+        # calculate f1-score for this target data set
+        # print('DEBUG :', X)
+        line = {"Data Set": tName}
+        for entry in modelList:
+            try:
+                score = modelList[entry].score(prep.transform(X),y)
+                print("{0}\'s score = {1}".format(entry, score))
+                line.update( {entry : score} )
+                myFunc.log(DSName, "F1-score for {0}: {1}".format(entry, line[entry]))
+            except Exception as e:
+                myFunc.log(DSName, "Something went wrong during trials on {0}\n".format(tName)+str(e)+"\n")
+        
+        rows.append(pd.DataFrame(line, index=[tName]))
+    table = pd.concat(rows, ignore_index=True)
+
+    table.to_csv(scorefile, header=True) # save F1-score table file
+    
+    
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+    
+    
+    
+# IF CALLED FROM TERMINAL
+
+if __name__ == "__main__":
+
+    datasetMSG = "Datasets available are :\n"
+    DST_MSG = "Dataset types available are :\n"
+    
+    scanOnly = False
+    scan = False
+    no_overwrite = False
+    
+    # help
+    if len(sys.argv) < 4:
+        print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <FEATURE_SET> <PCAP_SOURCE> [\"KEEP\"] [\"SCAN_ALL\"] [\"SCAN_ONLY\"]")
+        print(datasetMSG, myFunc.datasetOptions())
+        sys.exit()
+        
+    if len(sys.argv) > 3:
+        pNum = int(sys.argv[3])
+        dNum = int(sys.argv[2])
+        maxNumFiles = int(sys.argv[1])
+        # check for unknown dataset
+        if pNum not in myFunc.pcapOptions():
+            print("Unknown dataset(s): ")
+            print(datasetMSG, myFunc.datasetOptions())
+            sys.exit()
+       
+        # ToN-IoT and BoT-IoT only available in CIC dataset type
+        if pNum in [3, 4]:
+            dNum = 1
+            print("ToN-IoT and BoT-IoT only available in CIC dataset type")
+        # check for invalid types
+        elif (dNum not in myFunc.featureOptions()):
+            print("Invalid dataset type(s): ")
+            print(DST_MSG, myFunc.datasetType)
+            sys.exit()
+            
+    if len(sys.argv) > 4:
+        if "KEEP" in sys.argv[4:]:
+            no_overwrite = True
+            print("No Overwrite selected. Skipping data sets already tested")
+        if "SCAN_ALL" in sys.argv[4:]:
+            scan = True # target class is Scanning\Reconnaissance
+            print("Target Class: Scanning\\Reconnaissance selected")
+        elif "SCAN_ONLY" in sys.argv[4:]:
+            scan = True # target class is Scanning\Reconnaissance
+            scanOnly = True # exclude non Scanning\Reconnaissance attacks from data
+            print("Target Class: Scanning\\Reconnaissance selected, exclude other attacks from Benign data")
+                  
+        
+    runEvaluation(pNum, maxNumFiles, dNum, scanOnly, scan, no_overwrite)
+    
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+### OLD FUNCTION ###
+
+# only working with CIC features for now !!!
+
+#---------#
+# RUNNING #
+#---------#
+
+# Runs experiment for testSet
+def runEvaluationAll(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overwrite=True):
 
     #--------------------#
     # LOAD BEST ML MODEL #
@@ -118,62 +244,3 @@ def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overw
             myFunc.log(DSName, "Something went wrong during trials on {0}\n".format(tName)+str(e)+"\n")
 
     table.to_csv(scorefile, index=None, header=True) # save F1-score table file
-    
-    
-#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
-    
-    
-    
-# IF CALLED FROM TERMINAL
-
-if __name__ == "__main__":
-
-    datasetMSG = "Datasets available are :\n"
-    DST_MSG = "Dataset types available are :\n"
-    
-    scanOnly = False
-    scan = False
-    no_overwrite = False
-    
-    # help
-    if len(sys.argv) < 4:
-        print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <FEATURE_SET> <PCAP_SOURCE> [\"KEEP\"] [\"SCAN_ALL\"] [\"SCAN_ONLY\"]")
-        print(datasetMSG, myFunc.pcapType)
-        sys.exit()
-        
-    if len(sys.argv) > 3:
-        pNum = int(sys.argv[3])
-        dNum = int(sys.argv[2])
-        maxNumFiles = int(sys.argv[1])
-        # check for unknown dataset
-        if pNum not in myFunc.pcapOptions():
-            print("Unknown dataset(s): ")
-            print(datasetMSG, myFunc.pcapType)
-            sys.exit()
-       
-        # ToN-IoT and BoT-IoT only available in CIC dataset type
-        if pNum in [3, 4]:
-            dNum = 1
-            print("ToN-IoT and BoT-IoT only available in CIC dataset type")
-        # check for invalid types
-        elif (dNum not in myFunc.featureOptions()):
-            print("Invalid dataset type(s): ")
-            print(DST_MSG, myFunc.datasetType)
-            sys.exit()
-            
-    if len(sys.argv) > 4:
-        if "KEEP" in sys.argv[4:]:
-            no_overwrite = True
-            print("No Overwrite selected. Skipping data sets already tested")
-        if "SCAN_ALL" in sys.argv[4:]:
-            scan = True # target class is Scanning\Reconnaissance
-            print("Target Class: Scanning\\Reconnaissance selected")
-        elif "SCAN_ONLY" in sys.argv[4:]:
-            scan = True # target class is Scanning\Reconnaissance
-            scanOnly = True # exclude non Scanning\Reconnaissance attacks from data
-            print("Target Class: Scanning\\Reconnaissance selected, exclude other attacks from Benign data")
-                  
-        
-    runEvaluation(pNum, maxNumFiles, dNum, scanOnly, scan, no_overwrite)
-    
-#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

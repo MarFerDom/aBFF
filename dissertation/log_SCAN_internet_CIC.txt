@@ -1,0 +1,318 @@
+2022-01-03 14:53:02
+setTarget: Removed 0 flows from other attack types
+2022-01-03 14:53:22
+training MLP from SCAN_internet_CIC
+2022-01-03 17:30:12
+training SVM from SCAN_internet_CIC
+2022-01-03 19:11:46
+setTarget: Removed 0 flows from other attack types
+2022-01-03 19:12:08
+training SVM from SCAN_internet_CIC
+2022-01-04 07:04:52
+training XGB from SCAN_internet_CIC
+2022-01-04 17:53:44
+setTarget: Removed 0 flows from other attack types
+2022-01-04 17:54:10
+training XGB from SCAN_internet_CIC
+2022-01-04 23:28:42
+training NB from SCAN_internet_CIC
+2022-01-05 00:56:49
+training LR from SCAN_internet_CIC
+2022-01-05 05:44:54
+training DT from SCAN_internet_CIC
+2022-01-05 12:28:07
+Done!
+2022-01-08 14:31:23
+Evaluating SCAN_internet_CIC's ML models on AB-TRAP_CIC data set
+2022-01-08 14:31:42
+F1-score for DT: 0.10663451053248019
+2022-01-08 14:32:05
+F1-score for LR: 0.002013646702047005
+2022-01-08 14:32:16
+F1-score for MLP: 0.07585299156936832
+2022-01-08 14:36:21
+F1-score for NB: 0.0015759358896107435
+2022-01-08 14:39:09
+F1-score for SVM: 0.03780014743024253
+2022-01-08 14:39:34
+F1-score for XGB: 0.012400450925488199
+2022-01-08 14:39:38
+Evaluating SCAN_internet_CIC's ML models on NB15_CIC data set
+2022-01-08 14:39:38
+F1-score for DT: 0.0
+2022-01-08 14:39:38
+F1-score for LR: 0.0
+2022-01-08 14:39:38
+F1-score for MLP: 0.028297581013235967
+2022-01-08 14:39:39
+F1-score for NB: 0.0
+2022-01-08 14:39:39
+F1-score for SVM: 0.0
+2022-01-08 14:39:39
+F1-score for XGB: 0.0
+2022-01-08 14:40:54
+Evaluating SCAN_internet_CIC's ML models on CIC-IDS_CIC data set
+2022-01-08 14:40:56
+F1-score for DT: 2.496021964993292e-05
+2022-01-08 14:40:58
+F1-score for LR: 0.0020618822962223215
+2022-01-08 14:41:01
+F1-score for MLP: 0.00028840490092802833
+2022-01-08 14:41:05
+F1-score for NB: 0.0
+2022-01-08 14:41:08
+F1-score for SVM: 0.0008272984611395739
+2022-01-08 14:41:12
+F1-score for XGB: 0.0
+2022-01-08 14:43:45
+Evaluating SCAN_internet_CIC's ML models on ToN-IoT_CIC data set
+2022-01-08 14:43:48
+F1-score for DT: 0.0
+2022-01-08 14:43:50
+F1-score for LR: 0.030046302282202512
+2022-01-08 14:43:53
+F1-score for MLP: 0.0
+2022-01-08 14:43:58
+F1-score for NB: 0.0
+2022-01-08 14:44:00
+F1-score for SVM: 0.030046302282202512
+2022-01-08 14:44:05
+F1-score for XGB: 0.0
+2022-01-10 12:18:19
+Evaluating SCAN_internet_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-10 12:18:30
+F1-score for DT: 0.0
+2022-01-10 12:18:40
+F1-score for LR: 0.0
+2022-01-10 12:18:49
+F1-score for MLP: 0.0
+2022-01-10 12:24:01
+F1-score for NB: 0.0
+2022-01-10 12:25:16
+F1-score for SVM: 0.0
+2022-01-10 12:26:07
+F1-score for XGB: 0.0
+2022-01-10 12:26:21
+Evaluating SCAN_internet_CIC's ML models on SCAN_NB15_CIC data set
+2022-01-10 12:26:21
+F1-score for DT: 0.0
+2022-01-10 12:26:21
+F1-score for LR: 0.0
+2022-01-10 12:26:23
+F1-score for MLP: 0.0
+2022-01-10 12:26:23
+F1-score for NB: 0.0
+2022-01-10 12:26:23
+F1-score for SVM: 0.017670157068062825
+2022-01-10 12:26:23
+F1-score for XGB: 0.0
+2022-01-10 12:29:04
+Evaluating SCAN_internet_CIC's ML models on SCAN_CIC-IDS_CIC data set
+2022-01-10 12:29:06
+F1-score for DT: 0.13372269878931678
+2022-01-10 12:29:08
+F1-score for LR: 0.0
+2022-01-10 12:29:11
+F1-score for MLP: 0.04765927424969598
+2022-01-10 12:29:15
+F1-score for NB: 0.0
+2022-01-10 12:29:17
+F1-score for SVM: 0.2606229063508082
+2022-01-10 12:29:22
+F1-score for XGB: 0.0
+2022-01-10 12:31:17
+Evaluating SCAN_internet_CIC's ML models on SCAN_ToN-IoT_CIC data set
+2022-01-10 12:31:20
+F1-score for DT: 0.0
+2022-01-10 12:31:22
+F1-score for LR: 0.028048214574845465
+2022-01-10 12:31:25
+F1-score for MLP: 0.0
+2022-01-10 12:31:30
+F1-score for NB: 0.0
+2022-01-10 12:31:33
+F1-score for SVM: 0.028353352539971514
+2022-01-10 12:31:38
+F1-score for XGB: 0.0
+2022-01-10 12:36:09
+Evaluating SCAN_internet_CIC's ML models on SCAN_BoT-IoT_CIC data set
+2022-01-10 12:36:15
+F1-score for DT: 9.107919164940432e-06
+2022-01-10 12:36:19
+F1-score for LR: 0.0188326016299295
+2022-01-10 12:36:26
+F1-score for MLP: 0.08414906040980996
+2022-01-10 12:36:33
+F1-score for NB: 1.7077387319129122e-06
+2022-01-10 12:36:37
+F1-score for SVM: 0.541543051175439
+2022-01-10 12:36:45
+F1-score for XGB: 0.0
+2022-01-14 18:35:39
+Evaluating SCAN_internet_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-14 18:35:53
+F1-score for DT: TN = 9130296, FP = 2057, FN = 0, TP = 0
+2022-01-14 18:36:06
+F1-score for LR: TN = 9129667, FP = 2686, FN = 0, TP = 0
+2022-01-14 18:36:19
+F1-score for MLP: TN = 9124799, FP = 7554, FN = 0, TP = 0
+2022-01-14 18:38:27
+F1-score for NB: TN = 2194356, FP = 6937997, FN = 0, TP = 0
+2022-01-14 18:39:31
+F1-score for SVM: TN = 9132002, FP = 351, FN = 0, TP = 0
+2022-01-14 18:39:56
+F1-score for XGB: TN = 9130405, FP = 1948, FN = 0, TP = 0
+2022-01-14 18:40:06
+Evaluating SCAN_internet_CIC's ML models on SCAN_NB15_CIC data set
+2022-01-14 18:40:06
+F1-score for DT: TN = 36675, FP = 0, FN = 401, TP = 0
+2022-01-14 18:40:06
+F1-score for LR: TN = 36258, FP = 417, FN = 401, TP = 0
+2022-01-14 18:40:09
+F1-score for MLP: TN = 36671, FP = 4, FN = 401, TP = 0
+2022-01-14 18:40:09
+F1-score for NB: TN = 36675, FP = 0, FN = 401, TP = 0
+2022-01-14 18:40:10
+F1-score for SVM: TN = 27989, FP = 8686, FN = 320, TP = 81
+2022-01-14 18:40:10
+F1-score for XGB: TN = 36675, FP = 0, FN = 401, TP = 0
+2022-01-14 18:42:23
+Evaluating SCAN_internet_CIC's ML models on SCAN_CIC-IDS_CIC data set
+2022-01-14 18:42:26
+F1-score for DT: TN = 2261208, FP = 9914, FN = 146715, TP = 12089
+2022-01-14 18:42:29
+F1-score for LR: TN = 2266021, FP = 5101, FN = 158804, TP = 0
+2022-01-14 18:42:32
+F1-score for MLP: TN = 2219614, FP = 51508, FN = 153670, TP = 5134
+2022-01-14 18:42:38
+F1-score for NB: TN = 2263563, FP = 7559, FN = 158804, TP = 0
+2022-01-14 18:42:41
+F1-score for SVM: TN = 1377682, FP = 893440, FN = 1139, TP = 157665
+2022-01-14 18:42:46
+F1-score for XGB: TN = 2270898, FP = 224, FN = 158804, TP = 0
+2022-01-14 18:46:13
+Evaluating SCAN_internet_CIC's ML models on SCAN_ToN-IoT_CIC data set
+2022-01-14 18:46:16
+F1-score for DT: TN = 2514049, FP = 10, FN = 36205, TP = 0
+2022-01-14 18:46:19
+F1-score for LR: TN = 4843, FP = 2509216, FN = 0, TP = 36205
+2022-01-14 18:46:22
+F1-score for MLP: TN = 2514059, FP = 0, FN = 36205, TP = 0
+2022-01-14 18:46:28
+F1-score for NB: TN = 2514059, FP = 0, FN = 36205, TP = 0
+2022-01-14 18:46:32
+F1-score for SVM: TN = 32835, FP = 2481224, FN = 3, TP = 36202
+2022-01-14 18:46:37
+F1-score for XGB: TN = 2514040, FP = 19, FN = 36205, TP = 0
+2022-01-14 18:53:25
+Evaluating SCAN_internet_CIC's ML models on SCAN_BoT-IoT_CIC data set
+2022-01-14 18:53:34
+F1-score for DT: TN = 89234, FP = 0, FN = 3513394, TP = 16
+2022-01-14 18:53:41
+F1-score for LR: TN = 83428, FP = 5806, FN = 3479957, TP = 33453
+2022-01-14 18:53:47
+F1-score for MLP: TN = 83791, FP = 5443, FN = 3358853, TP = 154557
+2022-01-14 18:53:56
+F1-score for NB: TN = 89229, FP = 5, FN = 3513407, TP = 3
+2022-01-14 18:54:00
+F1-score for SVM: TN = 21112, FP = 68122, FN = 2183543, TP = 1329867
+2022-01-14 18:54:11
+F1-score for XGB: TN = 89234, FP = 0, FN = 3513410, TP = 0
+2022-01-18 01:39:02
+Evaluating SCAN_internet_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-18 01:39:16
+F1-score for DT: TN = 9130296, FP = 2057, FN = 0, TP = 0
+2022-01-18 01:39:28
+F1-score for LR: TN = 9129667, FP = 2686, FN = 0, TP = 0
+2022-01-18 01:39:41
+F1-score for MLP: TN = 9124799, FP = 7554, FN = 0, TP = 0
+2022-01-18 01:40:30
+F1-score for NB: TN = 2194356, FP = 6937997, FN = 0, TP = 0
+2022-01-18 01:40:56
+F1-score for SVM: TN = 9132002, FP = 351, FN = 0, TP = 0
+2022-01-18 01:41:22
+F1-score for XGB: TN = 9130405, FP = 1948, FN = 0, TP = 0
+2022-01-18 01:41:25
+Evaluating SCAN_internet_CIC's ML models on SCAN_NB15_CIC data set
+2022-01-18 01:41:25
+F1-score for DT: TN = 36675, FP = 0, FN = 401, TP = 0
+2022-01-18 01:41:25
+F1-score for LR: TN = 36258, FP = 417, FN = 401, TP = 0
+2022-01-18 01:41:26
+F1-score for MLP: TN = 36671, FP = 4, FN = 401, TP = 0
+2022-01-18 01:41:26
+F1-score for NB: TN = 36675, FP = 0, FN = 401, TP = 0
+2022-01-18 01:41:26
+F1-score for SVM: TN = 27989, FP = 8686, FN = 320, TP = 81
+2022-01-18 01:41:27
+F1-score for XGB: TN = 36675, FP = 0, FN = 401, TP = 0
+2022-01-18 01:42:13
+Evaluating SCAN_internet_CIC's ML models on SCAN_CIC-IDS_CIC data set
+2022-01-18 01:42:16
+F1-score for DT: TN = 2261208, FP = 9914, FN = 146715, TP = 12089
+2022-01-18 01:42:18
+F1-score for LR: TN = 2266021, FP = 5101, FN = 158804, TP = 0
+2022-01-18 01:42:22
+F1-score for MLP: TN = 2219614, FP = 51508, FN = 153670, TP = 5134
+2022-01-18 01:42:27
+F1-score for NB: TN = 2263563, FP = 7559, FN = 158804, TP = 0
+2022-01-18 01:42:30
+F1-score for SVM: TN = 1377682, FP = 893440, FN = 1139, TP = 157665
+2022-01-18 01:42:35
+F1-score for XGB: TN = 2270898, FP = 224, FN = 158804, TP = 0
+2022-01-18 01:45:00
+Evaluating SCAN_internet_CIC's ML models on SCAN_ToN-IoT_CIC data set
+2022-01-18 01:45:03
+F1-score for DT: TN = 2514049, FP = 10, FN = 36205, TP = 0
+2022-01-18 01:45:06
+F1-score for LR: TN = 4843, FP = 2509216, FN = 0, TP = 36205
+2022-01-18 01:45:09
+F1-score for MLP: TN = 2514059, FP = 0, FN = 36205, TP = 0
+2022-01-18 01:45:15
+F1-score for NB: TN = 2514059, FP = 0, FN = 36205, TP = 0
+2022-01-18 01:45:18
+F1-score for SVM: TN = 32835, FP = 2481224, FN = 3, TP = 36202
+2022-01-18 01:45:23
+F1-score for XGB: TN = 2514040, FP = 19, FN = 36205, TP = 0
+2022-01-18 01:49:16
+Evaluating SCAN_internet_CIC's ML models on SCAN_BoT-IoT_CIC data set
+2022-01-18 01:49:22
+F1-score for DT: TN = 89234, FP = 0, FN = 3513394, TP = 16
+2022-01-18 01:49:27
+F1-score for LR: TN = 83428, FP = 5806, FN = 3479957, TP = 33453
+2022-01-18 01:49:33
+F1-score for MLP: TN = 83791, FP = 5443, FN = 3358853, TP = 154557
+2022-01-18 01:49:42
+F1-score for NB: TN = 89229, FP = 5, FN = 3513407, TP = 3
+2022-01-18 01:49:47
+F1-score for SVM: TN = 21112, FP = 68122, FN = 2183543, TP = 1329867
+2022-01-18 01:50:01
+F1-score for XGB: TN = 89234, FP = 0, FN = 3513410, TP = 0
+2022-01-18 11:08:00
+Evaluating SCAN_internet_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-18 11:08:14
+F1-score for DT: TN = 9130296, FP = 2057, FN = 152782, TP = 9241
+2022-01-18 11:08:26
+F1-score for LR: TN = 9129667, FP = 2686, FN = 161857, TP = 166
+2022-01-18 11:08:41
+F1-score for MLP: TN = 9124799, FP = 7554, FN = 155338, TP = 6685
+2022-01-18 11:11:33
+F1-score for NB: TN = 2194356, FP = 6937997, FN = 156424, TP = 5599
+2022-01-18 11:12:08
+F1-score for SVM: TN = 9132002, FP = 351, FN = 158895, TP = 3128
+2022-01-18 11:12:37
+F1-score for XGB: TN = 9130405, FP = 1948, FN = 161000, TP = 1023
+2022-01-18 13:18:07
+Evaluating SCAN_internet_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-18 13:18:21
+F1-score for DT: TN = 9130296, FP = 2057, FN = 152782, TP = 9241
+2022-01-18 13:18:33
+F1-score for LR: TN = 9129667, FP = 2686, FN = 161857, TP = 166
+2022-01-18 13:18:47
+F1-score for MLP: TN = 9124799, FP = 7554, FN = 155338, TP = 6685
+2022-01-18 13:23:44
+F1-score for NB: TN = 2194356, FP = 6937997, FN = 156424, TP = 5599
+2022-01-18 13:24:18
+F1-score for SVM: TN = 9132002, FP = 351, FN = 158895, TP = 3128
+2022-01-18 13:24:46
+F1-score for XGB: TN = 9130405, FP = 1948, FN = 161000, TP = 1023

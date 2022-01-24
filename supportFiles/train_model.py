@@ -45,6 +45,7 @@ warnings.filterwarnings('ignore')
 # pcapType 2: CIC-IDS
 # pcapType 3: ToN-IoT
 # pcapType 4: BoT-IoT
+# pcapType 5: same as 0 but with internet synthetic attacks
 #
 # datasetType 0: UNSW_NB15
 # datasetType 1: CIC-IDS
@@ -64,10 +65,10 @@ def runExperiment(pcapTypeNum, maxNumFiles, datasetTypeNum=1, scanOnly=False, sc
     #----------------------#
 
     # AB-TRAP has only scanning attacks
-    if pcapTypeNum == 0:
-        scan = True
+    #if pcapTypeNum == 0:
+    #    scan = True
     
-    # Load training set
+    # Load training set..             using its own zero variance list
     X, y = myFunc.setTarget(myFunc.loadDataset(pcapTypeNum, maxNumFiles, datasetTypeNum), pcapTypeNum, scanOnly, scan, pcapTypeNum)
 
     #--------------#
@@ -134,7 +135,7 @@ if __name__ == "__main__":
     # help
     if len(sys.argv) < 4:
         print("Usage: " + sys.argv[0] + " <MAX_NUM_FILES> <FEATURE_SET> <PCAP_SOURCE> [\"KEEP\"] [\"SCAN_ALL\" (has precedence)] [\"SCAN_ONLY\"]")
-        print(datasetMSG, myFunc.pcapType)
+        print(datasetMSG, myFunc.datasetOptions())
         sys.exit()
         
     if len(sys.argv) > 3:
@@ -144,7 +145,7 @@ if __name__ == "__main__":
         # check for unknown dataset
         if pcapTypeNum not in myFunc.pcapOptions():
             print("Unknown dataset(s): ")
-            print(datasetMSG, myFunc.pcapType)
+            print(datasetMSG, myFunc.datasetOptions())
             sys.exit()
        
         # ToN-IoT and BoT-IoT only available in CIC dataset type
@@ -154,7 +155,7 @@ if __name__ == "__main__":
         # check for invalid types
         elif (datasetTypeNum not in myFunc.featureOptions()):
             print("Invalid dataset type(s): ")
-            print(DST_MSG, myFunc.datasetType)
+            print(DST_MSG, myFunc.featureOptions())
             sys.exit()
             
     if len(sys.argv) > 4:

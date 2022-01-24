@@ -1,0 +1,80 @@
+2022-01-03 14:53:02
+setTarget: Removed 0 flows from other attack types
+2022-01-03 14:53:22
+training MLP from SCAN_internet_CIC
+2022-01-03 17:30:12
+training SVM from SCAN_internet_CIC
+2022-01-03 19:11:46
+setTarget: Removed 0 flows from other attack types
+2022-01-03 19:12:08
+training SVM from SCAN_internet_CIC
+2022-01-04 07:04:52
+training XGB from SCAN_internet_CIC
+2022-01-04 17:53:44
+setTarget: Removed 0 flows from other attack types
+2022-01-04 17:54:10
+training XGB from SCAN_internet_CIC
+2022-01-04 23:28:42
+training NB from SCAN_internet_CIC
+2022-01-05 00:56:49
+training LR from SCAN_internet_CIC
+2022-01-05 05:44:54
+training DT from SCAN_internet_CIC
+2022-01-05 12:28:07
+Done!
+2022-01-08 14:31:23
+Evaluating SCAN_internet_CIC's ML models on AB-TRAP_CIC data set
+2022-01-08 14:31:42
+F1-score for DT: 0.10663451053248019
+2022-01-08 14:32:05
+F1-score for LR: 0.002013646702047005
+2022-01-08 14:32:16
+F1-score for MLP: 0.07585299156936832
+2022-01-08 14:36:21
+F1-score for NB: 0.0015759358896107435
+2022-01-08 14:39:09
+F1-score for SVM: 0.03780014743024253
+2022-01-08 14:39:34
+F1-score for XGB: 0.012400450925488199
+2022-01-08 14:39:38
+Evaluating SCAN_internet_CIC's ML models on NB15_CIC data set
+2022-01-08 14:39:38
+F1-score for DT: 0.0
+2022-01-08 14:39:38
+F1-score for LR: 0.0
+2022-01-08 14:39:38
+F1-score for MLP: 0.028297581013235967
+2022-01-08 14:39:39
+F1-score for NB: 0.0
+2022-01-08 14:39:39
+F1-score for SVM: 0.0
+2022-01-08 14:39:39
+F1-score for XGB: 0.0
+2022-01-08 14:40:54
+Evaluating SCAN_internet_CIC's ML models on CIC-IDS_CIC data set
+2022-01-08 14:40:56
+F1-score for DT: 2.496021964993292e-05
+2022-01-08 14:40:58
+F1-score for LR: 0.0020618822962223215
+2022-01-08 14:41:01
+F1-score for MLP: 0.00028840490092802833
+2022-01-08 14:41:05
+F1-score for NB: 0.0
+2022-01-08 14:41:08
+F1-score for SVM: 0.0008272984611395739
+2022-01-08 14:41:12
+F1-score for XGB: 0.0
+2022-01-08 14:43:45
+Evaluating SCAN_internet_CIC's ML models on ToN-IoT_CIC data set
+2022-01-08 14:43:48
+F1-score for DT: 0.0
+2022-01-08 14:43:50
+F1-score for LR: 0.030046302282202512
+2022-01-08 14:43:53
+F1-score for MLP: 0.0
+2022-01-08 14:43:58
+F1-score for NB: 0.0
+2022-01-08 14:44:00
+F1-score for SVM: 0.030046302282202512
+2022-01-08 14:44:05
+F1-score for XGB: 0.0

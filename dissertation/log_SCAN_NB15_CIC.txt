@@ -1,0 +1,658 @@
+2021-12-17 16:58:06
+setTarget: Removed 1911 flows from other attack types
+2021-12-17 16:58:07
+training MLP from SCAN_NB15_CIC
+2021-12-17 16:58:49
+training XGB from SCAN_NB15_CIC
+2021-12-17 16:59:03
+training NB from SCAN_NB15_CIC
+2021-12-17 16:59:04
+training LR from SCAN_NB15_CIC
+2021-12-17 16:59:04
+Something went wrong with LR from SCAN_NB15_CIC
+All estimators failed to fit
+
+2021-12-17 16:59:04
+training DT from SCAN_NB15_CIC
+2021-12-17 16:59:07
+Done!
+2021-12-17 22:24:48
+setTarget: Removed 1911 flows from other attack types
+2021-12-19 20:53:30
+setTarget: Removed 1911 flows from other attack types
+2021-12-19 20:53:31
+training SVM from SCAN_NB15_CIC
+2021-12-19 20:53:34
+Something went wrong with SVM from SCAN_NB15_CIC
+All estimators failed to fit
+
+2021-12-19 20:53:34
+training LR from SCAN_NB15_CIC
+2021-12-19 20:53:34
+Something went wrong with LR from SCAN_NB15_CIC
+All estimators failed to fit
+
+2021-12-19 20:53:34
+Done!
+2021-12-20 11:51:33
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-20 11:51:48
+F1-score for DT: 0.0342673781002684
+2021-12-20 11:52:37
+F1-score for MLP: 0.0342673781002684
+2021-12-20 11:54:11
+F1-score for NB: 0.0342673781002684
+2021-12-20 11:54:55
+F1-score for XGB: 0.0342673781002684
+2021-12-20 11:56:44
+Evaluating SCAN_NB15_CIC's ML models on CIC-IDS_CIC data set
+2021-12-20 11:56:47
+F1-score for DT: 1.0
+2021-12-20 11:56:50
+F1-score for MLP: 1.0
+2021-12-20 11:56:54
+F1-score for NB: 1.0
+2021-12-20 11:56:57
+F1-score for XGB: 1.0
+2021-12-20 12:00:56
+Evaluating SCAN_NB15_CIC's ML models on ToN-IoT_CIC data set
+2021-12-20 12:00:59
+F1-score for DT: 1.0
+2021-12-20 12:01:01
+F1-score for MLP: 1.0
+2021-12-20 12:01:04
+F1-score for NB: 1.0
+2021-12-20 12:01:07
+F1-score for XGB: 1.0
+2021-12-20 12:13:07
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-20 12:13:18
+F1-score for DT: 0.0342673781002684
+2021-12-20 12:13:28
+F1-score for MLP: 0.0342673781002684
+2021-12-20 12:15:31
+F1-score for NB: 0.0342673781002684
+2021-12-20 12:16:13
+F1-score for XGB: 0.0342673781002684
+2021-12-20 12:18:08
+Evaluating SCAN_NB15_CIC's ML models on CIC-IDS_CIC data set
+2021-12-20 12:18:11
+F1-score for DT: 1.0
+2021-12-20 12:18:17
+F1-score for MLP: 1.0
+2021-12-20 12:18:20
+F1-score for NB: 1.0
+2021-12-20 12:18:23
+F1-score for XGB: 1.0
+2021-12-20 12:22:17
+Evaluating SCAN_NB15_CIC's ML models on ToN-IoT_CIC data set
+2021-12-20 12:22:19
+F1-score for DT: 1.0
+2021-12-20 12:22:22
+F1-score for MLP: 1.0
+2021-12-20 12:22:25
+F1-score for NB: 1.0
+2021-12-20 12:22:28
+F1-score for XGB: 1.0
+2021-12-20 12:40:33
+setTarget: Removed 1911 flows from other attack types
+2021-12-20 12:58:40
+setTarget: Removed 1911 flows from other attack types
+2021-12-20 14:11:23
+setTarget: Removed 1911 flows from other attack types
+2021-12-20 14:31:59
+setTarget: Removed 1911 flows from other attack types
+2021-12-20 15:22:43
+setTarget: Removed 1911 flows from other attack types
+2021-12-21 11:34:36
+setTarget: Removed 1911 flows from other attack types
+2021-12-21 15:28:28
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-21 15:28:39
+F1-score for DT: 0.0342673781002684
+2021-12-21 15:28:49
+F1-score for MLP: 0.0342673781002684
+2021-12-21 15:29:20
+F1-score for NB: 0.0342673781002684
+2021-12-21 15:29:39
+F1-score for XGB: 0.0342673781002684
+2021-12-21 15:30:17
+Evaluating SCAN_NB15_CIC's ML models on CIC-IDS_CIC data set
+2021-12-21 15:30:19
+F1-score for DT: 1.0
+2021-12-21 15:30:21
+F1-score for MLP: 1.0
+2021-12-21 15:30:24
+F1-score for NB: 1.0
+2021-12-21 15:30:28
+F1-score for XGB: 1.0
+2021-12-21 15:32:04
+Evaluating SCAN_NB15_CIC's ML models on ToN-IoT_CIC data set
+2021-12-21 15:32:07
+F1-score for DT: 1.0
+2021-12-21 15:32:09
+F1-score for MLP: 1.0
+2021-12-21 15:32:13
+F1-score for NB: 1.0
+2021-12-21 15:32:17
+F1-score for XGB: 1.0
+2021-12-21 21:26:11
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-21 21:26:24
+F1-score for DT: 0.0342673781002684
+2021-12-21 21:26:35
+F1-score for MLP: 0.0342673781002684
+2021-12-21 21:27:07
+F1-score for NB: 0.0342673781002684
+2021-12-21 21:27:26
+F1-score for XGB: 0.0342673781002684
+2021-12-21 21:28:07
+Evaluating SCAN_NB15_CIC's ML models on CIC-IDS_CIC data set
+2021-12-21 21:28:09
+F1-score for DT: 1.0
+2021-12-21 21:28:12
+F1-score for MLP: 1.0
+2021-12-21 21:28:15
+F1-score for NB: 1.0
+2021-12-21 21:28:18
+F1-score for XGB: 1.0
+2021-12-21 21:30:30
+Evaluating SCAN_NB15_CIC's ML models on ToN-IoT_CIC data set
+2021-12-21 21:30:32
+F1-score for DT: 1.0
+2021-12-21 21:30:34
+F1-score for MLP: 1.0
+2021-12-21 21:30:38
+F1-score for NB: 1.0
+2021-12-21 21:30:41
+F1-score for XGB: 1.0
+2021-12-22 11:45:56
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-22 11:46:13
+F1-score for DT: 0.0342673781002684
+2021-12-22 11:46:30
+F1-score for MLP: 0.0342673781002684
+2021-12-22 11:47:09
+F1-score for NB: 0.0342673781002684
+2021-12-22 11:47:56
+F1-score for XGB: 0.0342673781002684
+2021-12-22 11:51:51
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-22 11:51:51
+Something went wrong during trials on AB-TRAP_CIC
+'str' object has no attribute 'best_estimator_'
+
+2021-12-22 11:51:51
+Something went wrong during trials on AB-TRAP_CIC
+'str' object has no attribute 'best_estimator_'
+
+2021-12-22 11:51:51
+Something went wrong during trials on AB-TRAP_CIC
+'str' object has no attribute 'best_estimator_'
+
+2021-12-22 11:51:51
+Something went wrong during trials on AB-TRAP_CIC
+'str' object has no attribute 'best_estimator_'
+
+2021-12-22 11:52:45
+Evaluating SCAN_NB15_CIC's ML models on CIC-IDS_CIC data set
+2021-12-22 11:52:45
+Something went wrong during trials on CIC-IDS_CIC
+'str' object has no attribute 'best_estimator_'
+
+2021-12-22 11:52:45
+Something went wrong during trials on CIC-IDS_CIC
+'str' object has no attribute 'best_estimator_'
+
+2021-12-22 11:52:45
+Something went wrong during trials on CIC-IDS_CIC
+'str' object has no attribute 'best_estimator_'
+
+2021-12-22 11:52:45
+Something went wrong during trials on CIC-IDS_CIC
+'str' object has no attribute 'best_estimator_'
+
+2021-12-22 11:56:13
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-22 11:56:30
+F1-score for DT: 0.0342673781002684
+2021-12-22 11:56:48
+F1-score for MLP: 0.0342673781002684
+2021-12-22 11:57:24
+F1-score for NB: 0.0342673781002684
+2021-12-22 11:57:56
+F1-score for XGB: 0.0342673781002684
+2021-12-22 11:58:50
+Evaluating SCAN_NB15_CIC's ML models on CIC-IDS_CIC data set
+2021-12-22 11:58:55
+F1-score for DT: 1.0
+2021-12-22 11:59:01
+F1-score for MLP: 1.0
+2021-12-22 11:59:08
+F1-score for NB: 1.0
+2021-12-22 11:59:14
+F1-score for XGB: 1.0
+2021-12-22 12:24:35
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-22 12:24:45
+F1-score for DT: 0.0342673781002684
+2021-12-22 12:24:56
+F1-score for MLP: 0.0342673781002684
+2021-12-22 12:27:23
+F1-score for NB: 0.0342673781002684
+2021-12-22 12:43:47
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-22 12:43:56
+F1-score for DT: 0.0342673781002684
+2021-12-22 12:44:09
+F1-score for MLP: 0.0342673781002684
+2021-12-22 12:46:43
+F1-score for NB: 0.0342673781002684
+2021-12-22 12:47:33
+F1-score for XGB: 0.0342673781002684
+2021-12-22 14:48:59
+setTarget: Removed 1911 flows from other attack types
+2021-12-22 16:25:29
+setTarget: Removed 1911 flows from other attack types
+2021-12-23 13:22:54
+setTarget: Removed 1911 flows from other attack types
+2021-12-23 13:22:54
+training MLP from SCAN_NB15_CIC
+2021-12-23 13:26:02
+training SVM from SCAN_NB15_CIC
+2021-12-23 13:26:21
+training XGB from SCAN_NB15_CIC
+2021-12-23 13:26:46
+training NB from SCAN_NB15_CIC
+2021-12-23 13:26:47
+training LR from SCAN_NB15_CIC
+2021-12-23 13:27:39
+training DT from SCAN_NB15_CIC
+2021-12-23 13:28:05
+Done!
+2021-12-24 15:32:53
+Evaluating SCAN_NB15_CIC's ML models on AB-TRAP_CIC data set
+2021-12-24 15:33:13
+F1-score for DT: 0.01139340657373037
+2021-12-24 15:33:25
+F1-score for LR: 0.015918017714601933
+2021-12-24 15:33:36
+F1-score for MLP: 0.0
+2021-12-24 15:42:53
+F1-score for NB: 0.0007574095669141333
+2021-12-24 15:45:18
+F1-score for SVM: 0.12333608062233493
+2021-12-24 15:45:40
+F1-score for XGB: 0.009837289956984702
+2021-12-24 15:48:13
+Evaluating SCAN_NB15_CIC's ML models on CIC-IDS_CIC data set
+2021-12-24 15:48:15
+F1-score for DT: 0.005640145161609676
+2021-12-24 15:48:17
+F1-score for LR: 0.0014675890661263915
+2021-12-24 15:48:20
+F1-score for MLP: 0.0
+2021-12-24 15:48:25
+F1-score for NB: 0.0
+2021-12-24 15:48:27
+F1-score for SVM: 0.11939335269441757
+2021-12-24 15:48:30
+F1-score for XGB: 0.002196781151484984
+2021-12-24 15:51:22
+Evaluating SCAN_NB15_CIC's ML models on ToN-IoT_CIC data set
+2021-12-24 15:51:25
+F1-score for DT: 0.023211270274751863
+2021-12-24 15:51:27
+F1-score for LR: 0.0
+2021-12-24 15:51:29
+F1-score for MLP: 0.0
+2021-12-24 15:51:34
+F1-score for NB: 0.0
+2021-12-24 15:51:36
+F1-score for SVM: 0.02799569606285635
+2021-12-24 15:51:40
+F1-score for XGB: 0.043287051848060226
+2021-12-24 17:31:00
+setTarget: Removed 1911 flows from other attack types
+2021-12-24 17:45:35
+setTarget: Removed 1911 flows from other attack types
+2021-12-25 10:27:25
+setTarget: Removed 1911 flows from other attack types
+2022-01-08 14:39:37
+setTarget: Removed 1911 flows from other attack types
+2022-01-12 15:33:45
+Evaluating SCAN_NB15_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-12 15:34:04
+F1-score for DT: 0.0
+2022-01-12 15:34:19
+F1-score for LR: 0.0
+2022-01-12 15:34:29
+F1-score for MLP: 0.0
+2022-01-12 15:53:24
+F1-score for NB: 0.0
+2022-01-12 15:54:34
+F1-score for SVM: 0.0
+2022-01-12 15:55:43
+F1-score for XGB: 0.0
+2022-01-12 15:58:31
+Evaluating SCAN_NB15_CIC's ML models on SCAN_CIC-IDS_CIC data set
+2022-01-12 15:58:34
+F1-score for DT: 0.014299354455852313
+2022-01-12 15:58:36
+F1-score for LR: 0.0431107766341965
+2022-01-12 15:58:38
+F1-score for MLP: 0.0
+2022-01-12 15:58:43
+F1-score for NB: 0.0013315058720630524
+2022-01-12 15:58:46
+F1-score for SVM: 0.16840477615075194
+2022-01-12 15:58:49
+F1-score for XGB: 0.02211697545246279
+2022-01-12 16:01:31
+Evaluating SCAN_NB15_CIC's ML models on SCAN_ToN-IoT_CIC data set
+2022-01-12 16:01:33
+F1-score for DT: 0.03708545033874855
+2022-01-12 16:01:36
+F1-score for LR: 0.014483613403429999
+2022-01-12 16:01:38
+F1-score for MLP: 0.0
+2022-01-12 16:01:44
+F1-score for NB: 0.0
+2022-01-12 16:01:46
+F1-score for SVM: 0.014483401797519705
+2022-01-12 16:01:50
+F1-score for XGB: 0.03698135044144481
+2022-01-12 16:06:19
+Evaluating SCAN_NB15_CIC's ML models on SCAN_BoT-IoT_CIC data set
+2022-01-12 16:06:24
+F1-score for DT: 0.509953005735666
+2022-01-12 16:06:28
+F1-score for LR: 0.8456078976593452
+2022-01-12 16:06:32
+F1-score for MLP: 0.007728240825797319
+2022-01-12 16:06:40
+F1-score for NB: 0.7423881572594456
+2022-01-12 16:06:43
+F1-score for SVM: 0.9410032731343422
+2022-01-12 16:06:50
+F1-score for XGB: 0.5037359691457842
+2022-01-12 16:10:27
+Evaluating SCAN_NB15_CIC's ML models on SCAN_internet_CIC data set
+2022-01-12 16:10:37
+F1-score for DT: 0.006921532512910294
+2022-01-12 16:10:47
+F1-score for LR: 0.019761258336006594
+2022-01-12 16:10:57
+F1-score for MLP: 0.0
+2022-01-12 16:12:17
+F1-score for NB: 0.011722430856860434
+2022-01-12 16:14:52
+F1-score for SVM: 0.002302114108122626
+2022-01-12 16:15:08
+F1-score for XGB: 0.006385274445682024
+2022-01-14 16:51:53
+Evaluating SCAN_NB15_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-14 16:52:06
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 0, TP = 0
+2022-01-14 16:52:18
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 0, TP = 0
+2022-01-14 16:52:33
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 0, TP = 0
+2022-01-14 16:56:01
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 0, TP = 0
+2022-01-14 16:56:43
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 0, TP = 0
+2022-01-14 16:57:04
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 0, TP = 0
+2022-01-14 16:58:47
+Evaluating SCAN_NB15_CIC's ML models on SCAN_CIC-IDS_CIC data set
+2022-01-14 16:58:51
+F1-score for DT: TN = 1385928, FP = 885194, FN = 151286, TP = 7518
+2022-01-14 16:58:54
+F1-score for LR: TN = 1506832, FP = 764290, FN = 138468, TP = 20336
+2022-01-14 16:59:02
+F1-score for MLP: TN = 2229359, FP = 41763, FN = 158804, TP = 0
+2022-01-14 16:59:08
+F1-score for NB: TN = 1611849, FP = 659273, FN = 158259, TP = 545
+2022-01-14 16:59:11
+F1-score for SVM: TN = 1104439, FP = 1166683, FN = 36933, TP = 121871
+2022-01-14 16:59:15
+F1-score for XGB: TN = 1820830, FP = 450292, FN = 151993, TP = 6811
+2022-01-14 17:00:58
+Evaluating SCAN_NB15_CIC's ML models on SCAN_ToN-IoT_CIC data set
+2022-01-14 17:01:01
+F1-score for DT: TN = 1959359, FP = 554700, FN = 25041, TP = 11164
+2022-01-14 17:01:05
+F1-score for LR: TN = 2142567, FP = 371492, FN = 33231, TP = 2974
+2022-01-14 17:01:08
+F1-score for MLP: TN = 2514056, FP = 3, FN = 36205, TP = 0
+2022-01-14 17:01:14
+F1-score for NB: TN = 2514049, FP = 10, FN = 36205, TP = 0
+2022-01-14 17:01:17
+F1-score for SVM: TN = 2142561, FP = 371498, FN = 33231, TP = 2974
+2022-01-14 17:01:22
+F1-score for XGB: TN = 1963397, FP = 550662, FN = 25149, TP = 11056
+2022-01-14 17:06:21
+Evaluating SCAN_NB15_CIC's ML models on SCAN_BoT-IoT_CIC data set
+2022-01-14 17:06:32
+F1-score for DT: TN = 56692, FP = 32542, FN = 2299845, TP = 1213565
+2022-01-14 17:06:39
+F1-score for LR: TN = 70502, FP = 18732, FN = 926068, TP = 2587342
+2022-01-14 17:06:47
+F1-score for MLP: TN = 89209, FP = 25, FN = 3499781, TP = 13629
+2022-01-14 17:06:57
+F1-score for NB: TN = 79767, FP = 9467, FN = 1433800, TP = 2079610
+2022-01-14 17:07:01
+F1-score for SVM: TN = 22489, FP = 66745, FN = 332156, TP = 3181254
+2022-01-14 17:07:14
+F1-score for XGB: TN = 57298, FP = 31936, FN = 2319825, TP = 1193585
+2022-01-14 17:10:05
+Evaluating SCAN_NB15_CIC's ML models on SCAN_internet_CIC data set
+2022-01-14 17:10:19
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 80863, TP = 4673
+2022-01-14 17:10:31
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 70382, TP = 15154
+2022-01-14 17:10:45
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 85536, TP = 0
+2022-01-14 17:12:21
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 78302, TP = 7234
+2022-01-14 17:12:50
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 83856, TP = 1680
+2022-01-14 17:13:14
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 81503, TP = 4033
+2022-01-17 16:48:41
+Evaluating SCAN_NB15_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-17 16:48:54
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 0, TP = 0
+2022-01-17 16:49:07
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 0, TP = 0
+2022-01-17 16:49:21
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 0, TP = 0
+2022-01-17 16:53:33
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 0, TP = 0
+2022-01-17 16:54:16
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 0, TP = 0
+2022-01-17 16:54:58
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 0, TP = 0
+2022-01-17 16:56:40
+Evaluating SCAN_NB15_CIC's ML models on SCAN_CIC-IDS_CIC data set
+2022-01-17 16:56:43
+F1-score for DT: TN = 1385928, FP = 885194, FN = 151286, TP = 7518
+2022-01-17 16:56:46
+F1-score for LR: TN = 1506832, FP = 764290, FN = 138468, TP = 20336
+2022-01-17 16:56:50
+F1-score for MLP: TN = 2229359, FP = 41763, FN = 158804, TP = 0
+2022-01-17 16:56:55
+F1-score for NB: TN = 1611849, FP = 659273, FN = 158259, TP = 545
+2022-01-17 16:56:58
+F1-score for SVM: TN = 1104439, FP = 1166683, FN = 36933, TP = 121871
+2022-01-17 16:57:02
+F1-score for XGB: TN = 1820830, FP = 450292, FN = 151993, TP = 6811
+2022-01-17 17:00:50
+Evaluating SCAN_NB15_CIC's ML models on SCAN_ToN-IoT_CIC data set
+2022-01-17 17:00:54
+F1-score for DT: TN = 1959359, FP = 554700, FN = 25041, TP = 11164
+2022-01-17 17:00:57
+F1-score for LR: TN = 2142567, FP = 371492, FN = 33231, TP = 2974
+2022-01-17 17:01:00
+F1-score for MLP: TN = 2514056, FP = 3, FN = 36205, TP = 0
+2022-01-17 17:01:07
+F1-score for NB: TN = 2514049, FP = 10, FN = 36205, TP = 0
+2022-01-17 17:01:10
+F1-score for SVM: TN = 2142561, FP = 371498, FN = 33231, TP = 2974
+2022-01-17 17:01:15
+F1-score for XGB: TN = 1963397, FP = 550662, FN = 25149, TP = 11056
+2022-01-17 17:11:13
+Evaluating SCAN_NB15_CIC's ML models on SCAN_BoT-IoT_CIC data set
+2022-01-17 17:11:25
+F1-score for DT: TN = 56692, FP = 32542, FN = 2299845, TP = 1213565
+2022-01-17 17:11:33
+F1-score for LR: TN = 70502, FP = 18732, FN = 926068, TP = 2587342
+2022-01-17 17:11:39
+F1-score for MLP: TN = 89209, FP = 25, FN = 3499781, TP = 13629
+2022-01-17 17:11:48
+F1-score for NB: TN = 79767, FP = 9467, FN = 1433800, TP = 2079610
+2022-01-17 17:11:52
+F1-score for SVM: TN = 22489, FP = 66745, FN = 332156, TP = 3181254
+2022-01-17 17:12:07
+F1-score for XGB: TN = 57298, FP = 31936, FN = 2319825, TP = 1193585
+2022-01-17 17:16:34
+Evaluating SCAN_NB15_CIC's ML models on SCAN_internet_CIC data set
+2022-01-17 17:16:47
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 80863, TP = 4673
+2022-01-17 17:16:59
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 70382, TP = 15154
+2022-01-17 17:17:12
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 85536, TP = 0
+2022-01-17 17:18:05
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 78302, TP = 7234
+2022-01-17 17:19:07
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 83856, TP = 1680
+2022-01-17 17:19:27
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 81503, TP = 4033
+2022-01-18 00:18:41
+Evaluating SCAN_NB15_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-18 00:18:54
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 0, TP = 0
+2022-01-18 00:19:07
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 0, TP = 0
+2022-01-18 00:19:21
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 0, TP = 0
+2022-01-18 00:20:29
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 0, TP = 0
+2022-01-18 00:21:53
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 0, TP = 0
+2022-01-18 00:22:11
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 0, TP = 0
+2022-01-18 00:22:49
+Evaluating SCAN_NB15_CIC's ML models on SCAN_CIC-IDS_CIC data set
+2022-01-18 00:22:52
+F1-score for DT: TN = 1385928, FP = 885194, FN = 151286, TP = 7518
+2022-01-18 00:22:55
+F1-score for LR: TN = 1506832, FP = 764290, FN = 138468, TP = 20336
+2022-01-18 00:22:59
+F1-score for MLP: TN = 2229359, FP = 41763, FN = 158804, TP = 0
+2022-01-18 00:23:04
+F1-score for NB: TN = 1611849, FP = 659273, FN = 158259, TP = 545
+2022-01-18 00:23:07
+F1-score for SVM: TN = 1104439, FP = 1166683, FN = 36933, TP = 121871
+2022-01-18 00:23:11
+F1-score for XGB: TN = 1820830, FP = 450292, FN = 151993, TP = 6811
+2022-01-18 00:25:38
+Evaluating SCAN_NB15_CIC's ML models on SCAN_ToN-IoT_CIC data set
+2022-01-18 00:25:41
+F1-score for DT: TN = 1959359, FP = 554700, FN = 25041, TP = 11164
+2022-01-18 00:25:44
+F1-score for LR: TN = 2142567, FP = 371492, FN = 33231, TP = 2974
+2022-01-18 00:25:48
+F1-score for MLP: TN = 2514056, FP = 3, FN = 36205, TP = 0
+2022-01-18 00:25:54
+F1-score for NB: TN = 2514049, FP = 10, FN = 36205, TP = 0
+2022-01-18 00:25:57
+F1-score for SVM: TN = 2142561, FP = 371498, FN = 33231, TP = 2974
+2022-01-18 00:26:02
+F1-score for XGB: TN = 1963397, FP = 550662, FN = 25149, TP = 11056
+2022-01-18 00:30:21
+Evaluating SCAN_NB15_CIC's ML models on SCAN_BoT-IoT_CIC data set
+2022-01-18 00:30:29
+F1-score for DT: TN = 56692, FP = 32542, FN = 2299845, TP = 1213565
+2022-01-18 00:30:34
+F1-score for LR: TN = 70502, FP = 18732, FN = 926068, TP = 2587342
+2022-01-18 00:30:40
+F1-score for MLP: TN = 89209, FP = 25, FN = 3499781, TP = 13629
+2022-01-18 00:30:48
+F1-score for NB: TN = 79767, FP = 9467, FN = 1433800, TP = 2079610
+2022-01-18 00:30:52
+F1-score for SVM: TN = 22489, FP = 66745, FN = 332156, TP = 3181254
+2022-01-18 00:31:00
+F1-score for XGB: TN = 57298, FP = 31936, FN = 2319825, TP = 1193585
+2022-01-18 00:33:04
+Evaluating SCAN_NB15_CIC's ML models on SCAN_internet_CIC data set
+2022-01-18 00:33:17
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 80863, TP = 4673
+2022-01-18 00:33:30
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 70382, TP = 15154
+2022-01-18 00:33:43
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 85536, TP = 0
+2022-01-18 00:35:09
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 78302, TP = 7234
+2022-01-18 00:35:47
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 83856, TP = 1680
+2022-01-18 00:36:17
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 81503, TP = 4033
+2022-01-18 10:16:36
+Evaluating SCAN_NB15_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-18 10:16:50
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 161697, TP = 326
+2022-01-18 10:17:03
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 159562, TP = 2461
+2022-01-18 10:17:16
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 162016, TP = 7
+2022-01-18 10:18:36
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 160483, TP = 1540
+2022-01-18 10:19:33
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 159017, TP = 3006
+2022-01-18 10:19:55
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 161782, TP = 241
+2022-01-18 10:40:28
+Evaluating SCAN_NB15_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-18 10:40:41
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 161697, TP = 326
+2022-01-18 10:40:54
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 159562, TP = 2461
+2022-01-18 10:41:07
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 162016, TP = 7
+2022-01-18 10:42:18
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 160483, TP = 1540
+2022-01-18 10:43:12
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 159017, TP = 3006
+2022-01-18 10:43:31
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 161782, TP = 241
+2022-01-18 12:00:49
+Evaluating SCAN_NB15_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-18 12:01:02
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 161697, TP = 326
+2022-01-18 12:01:15
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 159562, TP = 2461
+2022-01-18 12:01:27
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 162016, TP = 7
+2022-01-18 12:06:37
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 160483, TP = 1540
+2022-01-18 12:08:31
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 159017, TP = 3006
+2022-01-18 12:08:50
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 161782, TP = 241
+2022-01-18 12:41:13
+Evaluating SCAN_NB15_CIC's ML models on SCAN_AB-TRAP_CIC data set
+2022-01-18 12:41:36
+F1-score for DT: TN = 7872283, FP = 1260070, FN = 161697, TP = 326
+2022-01-18 12:41:49
+F1-score for LR: TN = 7699335, FP = 1433018, FN = 159562, TP = 2461
+2022-01-18 12:42:03
+F1-score for MLP: TN = 9120811, FP = 11542, FN = 162016, TP = 7
+2022-01-18 12:44:31
+F1-score for NB: TN = 7990908, FP = 1141445, FN = 160483, TP = 1540
+2022-01-18 12:47:13
+F1-score for SVM: TN = 7760041, FP = 1372312, FN = 159017, TP = 3006
+2022-01-18 12:47:32
+F1-score for XGB: TN = 7958703, FP = 1173650, FN = 161782, TP = 241

@@ -1,0 +1,164 @@
+2021-12-17 06:28:49
+setTarget: Removed 397751 flows from other attack types
+2021-12-17 06:28:54
+training MLP from SCAN_CIC-IDS_CIC
+2021-12-17 07:31:19
+training XGB from SCAN_CIC-IDS_CIC
+2021-12-17 07:51:15
+training NB from SCAN_CIC-IDS_CIC
+2021-12-17 07:51:56
+training LR from SCAN_CIC-IDS_CIC
+2021-12-17 07:52:08
+Something went wrong with LR from SCAN_CIC-IDS_CIC
+All estimators failed to fit
+
+2021-12-17 07:52:08
+training DT from SCAN_CIC-IDS_CIC
+2021-12-17 07:55:16
+Done!
+2021-12-17 22:25:33
+setTarget: Removed 397751 flows from other attack types
+2021-12-19 20:55:47
+setTarget: Removed 397751 flows from other attack types
+2021-12-19 20:55:54
+training SVM from SCAN_CIC-IDS_CIC
+2021-12-19 20:56:13
+Something went wrong with SVM from SCAN_CIC-IDS_CIC
+All estimators failed to fit
+
+2021-12-19 20:56:13
+training LR from SCAN_CIC-IDS_CIC
+2021-12-19 20:56:31
+Something went wrong with LR from SCAN_CIC-IDS_CIC
+All estimators failed to fit
+
+2021-12-19 20:56:31
+Done!
+2021-12-20 11:56:43
+setTarget: Removed 397751 flows from other attack types
+2021-12-20 12:18:07
+setTarget: Removed 397751 flows from other attack types
+2021-12-20 12:29:34
+Evaluating SCAN_CIC-IDS_CIC's ML models on AB-TRAP_CIC data set
+2021-12-20 12:29:45
+F1-score for DT: 0.0342673781002684
+2021-12-20 12:30:34
+F1-score for MLP: 0.0342673781002684
+2021-12-20 12:38:58
+F1-score for NB: 0.0342673781002684
+2021-12-20 12:40:23
+F1-score for XGB: 0.0342673781002684
+2021-12-20 12:40:33
+Evaluating SCAN_CIC-IDS_CIC's ML models on NB15_CIC data set
+2021-12-20 12:40:34
+F1-score for DT: 1.0
+2021-12-20 12:40:35
+F1-score for MLP: 1.0
+2021-12-20 12:40:36
+F1-score for NB: 1.0
+2021-12-20 12:40:36
+F1-score for XGB: 1.0
+2021-12-20 12:44:12
+Evaluating SCAN_CIC-IDS_CIC's ML models on ToN-IoT_CIC data set
+2021-12-20 12:44:14
+F1-score for DT: 1.0
+2021-12-20 12:44:27
+F1-score for MLP: 1.0
+2021-12-20 12:44:30
+F1-score for NB: 1.0
+2021-12-20 12:44:34
+F1-score for XGB: 1.0
+2021-12-20 12:59:45
+setTarget: Removed 397751 flows from other attack types
+2021-12-20 14:12:31
+setTarget: Removed 397751 flows from other attack types
+2021-12-20 14:33:00
+setTarget: Removed 397751 flows from other attack types
+2021-12-20 15:23:27
+setTarget: Removed 397751 flows from other attack types
+2021-12-21 11:35:30
+setTarget: Removed 397751 flows from other attack types
+2021-12-21 15:30:15
+setTarget: Removed 397751 flows from other attack types
+2021-12-21 21:28:06
+setTarget: Removed 397751 flows from other attack types
+2021-12-22 11:52:42
+setTarget: Removed 397751 flows from other attack types
+2021-12-22 11:58:47
+setTarget: Removed 397751 flows from other attack types
+2021-12-22 14:09:00
+setTarget: Removed 397751 flows from other attack types
+2021-12-22 14:20:06
+setTarget: Removed 397751 flows from other attack types
+2021-12-22 14:49:23
+setTarget: Removed 397751 flows from other attack types
+2021-12-22 14:56:40
+setTarget: Removed 397751 flows from other attack types
+2021-12-22 16:18:44
+setTarget: Removed 397751 flows from other attack types
+2021-12-23 14:32:10
+setTarget: Removed 397751 flows from other attack types
+2021-12-23 14:32:14
+training MLP from SCAN_CIC-IDS_CIC
+2021-12-23 15:51:25
+training SVM from SCAN_CIC-IDS_CIC
+2021-12-23 16:28:52
+training XGB from SCAN_CIC-IDS_CIC
+2021-12-23 18:01:15
+training NB from SCAN_CIC-IDS_CIC
+2021-12-23 18:02:11
+training LR from SCAN_CIC-IDS_CIC
+2021-12-23 19:01:01
+training DT from SCAN_CIC-IDS_CIC
+2021-12-23 21:11:39
+Done!
+2021-12-24 15:48:12
+setTarget: Removed 397751 flows from other attack types
+2021-12-24 17:17:58
+Evaluating SCAN_CIC-IDS_CIC's ML models on AB-TRAP_CIC data set
+2021-12-24 17:18:10
+F1-score for DT: 0.4177310127583915
+2021-12-24 17:18:19
+F1-score for LR: 0.0
+2021-12-24 17:18:30
+F1-score for MLP: 0.003648449754351537
+2021-12-24 17:26:54
+F1-score for NB: 0.0
+2021-12-24 17:30:13
+F1-score for SVM: 0.0018231024676561007
+2021-12-24 17:30:43
+F1-score for XGB: 0.0
+2021-12-24 17:31:01
+Evaluating SCAN_CIC-IDS_CIC's ML models on NB15_CIC data set
+2021-12-24 17:31:01
+F1-score for DT: 0.02171056390333086
+2021-12-24 17:31:01
+F1-score for LR: 0.0
+2021-12-24 17:31:04
+F1-score for MLP: 0.00023912003825920608
+2021-12-24 17:31:04
+F1-score for NB: 0.0
+2021-12-24 17:31:04
+F1-score for SVM: 0.0
+2021-12-24 17:31:04
+F1-score for XGB: 0.0028288543140028294
+2021-12-24 17:34:11
+Evaluating SCAN_CIC-IDS_CIC's ML models on ToN-IoT_CIC data set
+2021-12-24 17:34:14
+F1-score for DT: 0.007598337601276186
+2021-12-24 17:34:16
+F1-score for LR: 0.027995761006440068
+2021-12-24 17:34:18
+F1-score for MLP: 0.02799569606285635
+2021-12-24 17:34:23
+F1-score for NB: 0.0
+2021-12-24 17:34:25
+F1-score for SVM: 0.030046302282202512
+2021-12-24 17:34:30
+F1-score for XGB: 0.001597708115255358
+2021-12-24 17:47:12
+setTarget: Removed 397751 flows from other attack types
+2021-12-25 10:30:44
+setTarget: Removed 397751 flows from other attack types
+2022-01-08 14:40:52
+setTarget: Removed 397751 flows from other attack types

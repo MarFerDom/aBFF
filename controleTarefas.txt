@@ -1,11 +1,7 @@
-pcap do CIC -> dataset NB15 - falta codigo CIC_to_NB15
-pcap do NB15 -> CIC               DONE
-pcap do AB-TRAP(ataques) -> CIC   DONE
-pcap do AB-TRAP(bonafide) -> CIC  DONE
-pcap do AB-TRAP(ataques) -> NB15  DONE
-pcap do AB-TRAP(bonafide) -> NB15 [otimizar codigo _to_NB15, muito lento]
-read CIC labels to make NB-15 type dataset
-trainTest.py -> pass functions as argument to improve flexibility of code
+- make code save old files prior to overwriting
+- make code adaptable to 4-tuple
+- make evaluation per target data set to avoid reloading
+- test with all trained ML
 
 PCAP\dataset | NB15 | CIC  |   |
 --------------------------------
@@ -14,10 +10,6 @@ CIC          |      |  OK  |
 bonafide     |      |  OK  |
 attack       |  OK  |  OK  |
 
-files:
-- featuresNB15.py(folderName)    -> folderName_NB15.csv
-- featuresCIC.py(folderName)     -> folderName_CIC.csv
-- CIC_labels.py
 
 * check for label repetition (plurals, underscores, synonyms...)
 * check 1_Extract_Features.sh different dir
