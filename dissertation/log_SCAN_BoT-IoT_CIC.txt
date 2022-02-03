@@ -422,3 +422,31 @@ F1-score for NB: TN = 3177520, FP = 5954833, FN = 161358, TP = 665
 F1-score for SVM: TN = 1877755, FP = 7254598, FN = 4031, TP = 157992
 2022-01-18 13:13:53
 F1-score for XGB: TN = 4270507, FP = 4861846, FN = 150260, TP = 11763
+2022-01-24 10:54:55
+setTarget: Removed 9824925 flows from other attack types
+2022-01-24 11:56:38
+setTarget: Removed 9824925 flows from other attack types
+2022-01-24 14:01:04
+setTarget: Removed 9824925 flows from other attack types
+2022-01-24 14:51:30
+setTarget: Removed 9824925 flows from other attack types
+2022-01-24 15:19:19
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 00:39:30
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 00:53:32
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 01:02:53
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 08:54:14
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 09:36:52
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 10:06:51
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 14:37:13
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 15:11:20
+setTarget: Removed 9824925 flows from other attack types
+2022-01-26 15:44:43
+setTarget: Removed 9824925 flows from other attack types

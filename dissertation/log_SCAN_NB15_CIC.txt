@@ -656,3 +656,5 @@ F1-score for NB: TN = 7990908, FP = 1141445, FN = 160483, TP = 1540
 F1-score for SVM: TN = 7760041, FP = 1372312, FN = 159017, TP = 3006
 2022-01-18 12:47:32
 F1-score for XGB: TN = 7958703, FP = 1173650, FN = 161782, TP = 241
+2022-01-26 06:32:42
+setTarget: Removed 1911 flows from other attack types

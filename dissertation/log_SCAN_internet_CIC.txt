@@ -316,3 +316,23 @@ F1-score for NB: TN = 2194356, FP = 6937997, FN = 156424, TP = 5599
 F1-score for SVM: TN = 9132002, FP = 351, FN = 158895, TP = 3128
 2022-01-18 13:24:46
 F1-score for XGB: TN = 9130405, FP = 1948, FN = 161000, TP = 1023
+2022-01-24 15:49:44
+setTarget: Removed 0 flows from other attack types
+2022-01-26 01:05:56
+setTarget: Removed 0 flows from other attack types
+2022-01-26 10:55:59
+setTarget: Removed 0 flows from other attack types
+2022-01-26 16:07:19
+setTarget: Removed 0 flows from other attack types
+2022-01-30 18:31:18
+setTarget: Removed 0 flows from other attack types
+2022-01-30 19:23:44
+setTarget: Removed 0 flows from other attack types
+2022-01-30 19:24:08
+training SVM from SCAN_internet_CIC
+2022-01-31 06:50:58
+training NB from SCAN_internet_CIC
+2022-01-31 08:01:11
+training LR from SCAN_internet_CIC
+2022-01-31 12:43:41
+training RF from SCAN_internet_CIC
