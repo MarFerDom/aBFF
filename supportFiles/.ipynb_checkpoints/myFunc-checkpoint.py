@@ -352,18 +352,20 @@ def loadModel(modelType):
     
     
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+def getFeatureList(varType):
+    featFile = open("./ML-output/features_{0}.txt".format(getDSName(varType), "r"))
+    features = featFile.read()
+    featFile.close()
+    features = features.split(", ")
+
+    zeroVar = zeroVarRead(varType)
+    return [x for x in features if x not in zeroVar]
 
 def loadAndSet(DSName, zeroVarType):
     
     finalfilepath = "./dataset/final/{0}.csv".format( DSName.replace("ATK_","").replace("SCAN_","") )
     
-    featFile = open("./ML-output/features_{0}.txt".format(getDSName(zeroVarType), "r"))
-    features = featFile.read()
-    featFile.close()
-    features = features.split(", ")
-
-    zeroVar = zeroVarRead(zeroVarType)
-    features = [x for x in features if x not in zeroVar]
+    features = getFeatureList(zeroVarType)
     
     if os.path.isfile(finalfilepath):
         print( "Loading data set from existing file: {0}.csv".format( DSName ) )

@@ -1,0 +1,61 @@
+\begin{table}[H]
+\centering
+\caption{\textit{Features} ordenadas por importância para cada modelo e \textit{Data Set}}
+\label{tab:importFeat}
+\begin{tabular}{cccccc}
+\toprule
+                                                              Data Set &                     DT &                     LR &                     MLP &                    SVM &                     XGB \\
+\midrule
+\textbackslash multirow\{10\}\{*\}\{\textbackslash rotatebox\{90\}\{\textbackslash parbox\{100pt\}\{\textbackslash textbf\{CIC-AB-TRAP\}\}\}\} &       (67\%) bwd\_pkts\_s &     (9\%) flow\_duration &           (8\%) dst\_port &  (8\%) subflow\_bwd\_byts &        (46\%) bwd\_pkts\_s \\
+                                                                       &    (7\%) bwd\_header\_len &  (6\%) subflow\_bwd\_byts &        (7\%) pkt\_len\_std &   (8\%) totlen\_bwd\_pkts &       (18\%) pkt\_len\_max \\
+                                                                       & (6\%) init\_fwd\_win\_byts &   (6\%) totlen\_bwd\_pkts &       (6\%) fin\_flag\_cnt &    (6\%) bwd\_header\_len &    (10\%) bwd\_header\_len \\
+                                                                       &     (5\%) flow\_duration &  (6\%) subflow\_bwd\_pkts &  (5\%) init\_fwd\_win\_byts &      (3\%) flow\_iat\_min &    (8\%) totlen\_bwd\_pkts \\
+                                                                       &          (3\%) dst\_port &      (6\%) tot\_bwd\_pkts &      (4\%) flow\_duration &     (2\%) flow\_duration &           (4\%) protocol \\
+                                                                       &  (3\%) fwd\_seg\_size\_min &     (4\%) down\_up\_ratio &    (4\%) fwd\_pkt\_len\_std &       (2\%) flow\_pkts\_s &        (3\%) pkt\_len\_std \\
+                                                                       &       (2\%) pkt\_len\_var &    (4\%) bwd\_header\_len &        (4\%) pkt\_len\_min &        (2\%) fwd\_pkts\_s &  (2\%) init\_fwd\_win\_byts \\
+                                                                       &   (2\%) totlen\_fwd\_pkts &      (3\%) flow\_iat\_max &       (3\%) flow\_iat\_min &       (2\%) pkt\_len\_min &       (1\%) fin\_flag\_cnt \\
+                                                                       &   (1\%) fwd\_pkt\_len\_min &      (3\%) flow\_iat\_std &       (3\%) flow\_iat\_std &   (2\%) fwd\_pkt\_len\_max &    (1\%) fwd\_pkt\_len\_min \\
+                                                                       &  (1\%) fwd\_pkt\_len\_mean &      (2\%) bwd\_iat\_mean &      (3\%) flow\_iat\_mean &  (2\%) bwd\_pkt\_len\_mean &         (1\%) fwd\_pkts\_s \\
+   \textbackslash multirow\{10\}\{*\}\{\textbackslash rotatebox\{90\}\{\textbackslash parbox\{100pt\}\{\textbackslash textbf\{CIC-NB15\}\}\}\} &     (88\%) fin\_flag\_cnt &          (7\%) dst\_port &         (5\%) active\_std &       (3\%) pkt\_len\_var &  (28\%) bwd\_pkt\_len\_mean \\
+                                                                       &          (9\%) dst\_port &   (6\%) bwd\_pkt\_len\_max &           (5\%) idle\_max &          (2\%) dst\_port &          (27\%) dst\_port \\
+                                                                       &      (3\%) pkt\_size\_avg &       (5\%) pkt\_len\_var &        (4\%) fwd\_iat\_max &   (2\%) bwd\_pkt\_len\_max &  (22\%) fwd\_pkt\_len\_mean \\
+                                                                       &          (0\%) idle\_max &      (5\%) fin\_flag\_cnt &       (4\%) flow\_iat\_max &     (2\%) flow\_iat\_mean &     (10\%) flow\_duration \\
+                                                                       &       (0\%) bwd\_iat\_tot & (5\%) fwd\_act\_data\_pkts &    (4\%) fwd\_pkt\_len\_std &   (2\%) bwd\_pkt\_len\_std &        (6\%) flow\_byts\_s \\
+                                                                       &       (0\%) bwd\_iat\_max &   (5\%) bwd\_pkt\_len\_std &        (3\%) fwd\_iat\_tot & (2\%) fwd\_act\_data\_pkts &    (2\%) fwd\_pkt\_len\_max \\
+                                                                       &       (0\%) bwd\_iat\_min &     (4\%) down\_up\_ratio &       (3\%) fwd\_iat\_mean &  (2\%) fwd\_seg\_size\_avg &       (2\%) fin\_flag\_cnt \\
+                                                                       &      (0\%) bwd\_iat\_mean &     (4\%) flow\_iat\_mean &    (3\%) fwd\_pkt\_len\_min &        (2\%) active\_max &       (1\%) pkt\_len\_mean \\
+                                                                       &       (0\%) bwd\_iat\_std &          (4\%) idle\_min &           (3\%) dst\_port &      (2\%) fwd\_iat\_mean &        (1\%) fwd\_iat\_max \\
+                                                                       &     (0\%) down\_up\_ratio &          (3\%) idle\_std &      (3\%) flow\_iat\_mean &  (2\%) fwd\_pkt\_len\_mean &        (0\%) fwd\_iat\_tot \\
+\textbackslash multirow\{10\}\{*\}\{\textbackslash rotatebox\{90\}\{\textbackslash parbox\{100pt\}\{\textbackslash textbf\{CIC-CIC-IDS\}\}\}\} & (50\%) subflow\_fwd\_byts &   (5\%) fwd\_pkt\_len\_max & (18\%) fwd\_act\_data\_pkts & (6\%) fwd\_act\_data\_pkts &   (50\%) totlen\_fwd\_pkts \\
+                                                                       &      (45\%) flow\_byts\_s &      (5\%) flow\_iat\_min &      (14\%) tot\_fwd\_pkts &  (5\%) subflow\_fwd\_pkts &       (32\%) flow\_byts\_s \\
+                                                                       &      (3\%) psh\_flag\_cnt &   (4\%) fwd\_pkt\_len\_std &  (14\%) subflow\_fwd\_pkts &      (5\%) tot\_fwd\_pkts &      (11\%) psh\_flag\_cnt \\
+                                                                       &    (0\%) fwd\_header\_len &  (4\%) fwd\_seg\_size\_avg &      (11\%) tot\_bwd\_pkts &      (4\%) pkt\_len\_mean &       (1\%) pkt\_size\_avg \\
+                                                                       &      (0\%) pkt\_len\_mean &  (4\%) fwd\_pkt\_len\_mean &  (11\%) subflow\_bwd\_pkts &      (4\%) tot\_bwd\_pkts &        (1\%) pkt\_len\_min \\
+                                                                       &        (0\%) bwd\_pkts\_s &     (4\%) flow\_iat\_mean &         (2\%) fwd\_pkts\_s &  (4\%) subflow\_bwd\_pkts &       (0\%) fwd\_iat\_mean \\
+                                                                       &       (0\%) fwd\_iat\_min &     (3\%) flow\_duration &       (1\%) ack\_flag\_cnt &       (2\%) pkt\_len\_max &    (0\%) totlen\_bwd\_pkts \\
+                                                                       &   (0\%) fwd\_pkt\_len\_max &      (3\%) pkt\_size\_avg &        (1\%) flow\_pkts\_s &      (2\%) pkt\_size\_avg &       (0\%) tot\_fwd\_pkts \\
+                                                                       &   (0\%) bwd\_pkt\_len\_std &      (3\%) flow\_iat\_max &        (1\%) pkt\_len\_min &      (2\%) flow\_iat\_max &         (0\%) bwd\_pkts\_s \\
+                                                                       &       (0\%) pkt\_len\_var &        (3\%) fwd\_pkts\_s &           (1\%) protocol &      (2\%) flow\_iat\_min &        (0\%) bwd\_iat\_min \\
+\textbackslash multirow\{10\}\{*\}\{\textbackslash rotatebox\{90\}\{\textbackslash parbox\{100pt\}\{\textbackslash textbf\{CIC-ToN-IoT\}\}\}\} &   (44\%) fwd\_header\_len &         (24\%) dst\_port &        (6\%) bwd\_iat\_min &    (3\%) bwd\_header\_len &   (19\%) bwd\_pkt\_len\_min \\
+                                                                       &         (29\%) dst\_port &      (12\%) pkt\_len\_min &       (5\%) rst\_flag\_cnt &    (3\%) fwd\_header\_len &          (15\%) dst\_port \\
+                                                                       &        (14\%) idle\_mean &    (4\%) bwd\_byts\_b\_avg &    (5\%) bwd\_pkt\_len\_max &      (3\%) psh\_flag\_cnt & (14\%) init\_bwd\_win\_byts \\
+                                                                       &       (4\%) bwd\_iat\_max &          (4\%) protocol &        (4\%) pkt\_len\_var &          (2\%) dst\_port &    (9\%) bwd\_pkt\_len\_std \\
+                                                                       &   (3\%) fwd\_pkt\_len\_max &   (4\%) totlen\_bwd\_pkts &    (4\%) bwd\_pkt\_len\_std &      (2\%) syn\_flag\_cnt &  (7\%) init\_fwd\_win\_byts \\
+                                                                       & (2\%) init\_fwd\_win\_byts &   (3\%) totlen\_fwd\_pkts &           (3\%) dst\_port &   (2\%) totlen\_bwd\_pkts &        (7\%) bwd\_iat\_max \\
+                                                                       &       (1\%) fwd\_iat\_max &      (3\%) flow\_iat\_min &       (3\%) psh\_flag\_cnt &      (2\%) rst\_flag\_cnt &        (5\%) bwd\_iat\_std \\
+                                                                       &          (1\%) protocol &       (3\%) pkt\_len\_var &  (3\%) init\_fwd\_win\_byts &     (2\%) flow\_iat\_mean &         (4\%) bwd\_pkts\_s \\
+                                                                       &  (0\%) fwd\_seg\_size\_min &       (3\%) pkt\_len\_std &       (3\%) syn\_flag\_cnt &     (2\%) down\_up\_ratio &     (4\%) fwd\_header\_len \\
+                                                                       &          (0\%) idle\_std &      (3\%) pkt\_size\_avg &        (3\%) pkt\_len\_max &      (2\%) ack\_flag\_cnt &          (3\%) idle\_mean \\
+\textbackslash multirow\{10\}\{*\}\{\textbackslash rotatebox\{90\}\{\textbackslash parbox\{100pt\}\{\textbackslash textbf\{CIC-BoT-IoT\}\}\}\} &     (39\%) syn\_flag\_cnt &       (8\%) bwd\_iat\_tot &    (24\%) bwd\_header\_len &      (9\%) tot\_bwd\_pkts &          (69\%) protocol \\
+                                                                       &         (17\%) dst\_port & (8\%) init\_bwd\_win\_byts &   (7\%) subflow\_bwd\_pkts &  (9\%) subflow\_bwd\_pkts &   (10\%) fwd\_pkt\_len\_min \\
+                                                                       &     (11\%) flow\_iat\_min &    (5\%) fwd\_header\_len &       (7\%) tot\_bwd\_pkts &    (8\%) bwd\_header\_len &  (3\%) init\_bwd\_win\_byts \\
+                                                                       &         (10\%) protocol &      (5\%) tot\_fwd\_pkts &     (4\%) fwd\_header\_len & (8\%) fwd\_act\_data\_pkts &       (2\%) syn\_flag\_cnt \\
+                                                                       &    (7\%) bwd\_header\_len &  (5\%) subflow\_fwd\_pkts &   (3\%) subflow\_fwd\_pkts &    (5\%) fwd\_header\_len &        (2\%) pkt\_len\_max \\
+                                                                       & (4\%) init\_bwd\_win\_byts &     (4\%) flow\_duration &       (3\%) tot\_fwd\_pkts &       (3\%) fwd\_iat\_std &  (1\%) fwd\_act\_data\_pkts \\
+                                                                       &       (3\%) fwd\_iat\_min & (4\%) fwd\_act\_data\_pkts &      (3\%) down\_up\_ratio &      (3\%) tot\_fwd\_pkts &    (1\%) bwd\_pkt\_len\_min \\
+                                                                       &  (3\%) subflow\_fwd\_pkts &       (4\%) bwd\_iat\_std &  (3\%) init\_bwd\_win\_byts &  (3\%) subflow\_fwd\_pkts &     (1\%) bwd\_header\_len \\
+                                                                       &        (2\%) fwd\_pkts\_s &       (4\%) fwd\_iat\_tot &    (3\%) fwd\_pkt\_len\_max &   (2\%) totlen\_fwd\_pkts &       (1\%) ack\_flag\_cnt \\
+                                                                       &      (1\%) ack\_flag\_cnt &      (3\%) flow\_iat\_max &       (2\%) syn\_flag\_cnt &  (2\%) subflow\_fwd\_byts &       (1\%) fwd\_iat\_mean \\
+\bottomrule
+\end{tabular}
+\end{table}
