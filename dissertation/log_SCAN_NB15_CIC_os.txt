@@ -1,0 +1,14 @@
+2022-03-28 02:48:41
+training MLP from SCAN_NB15_CIC_os
+2022-03-28 02:54:18
+training SVM from SCAN_NB15_CIC_os
+2022-03-28 02:55:21
+training XGB from SCAN_NB15_CIC_os
+2022-03-28 02:56:38
+training NB from SCAN_NB15_CIC_os
+2022-03-28 02:56:39
+training LR from SCAN_NB15_CIC_os
+2022-03-28 02:58:38
+training DT from SCAN_NB15_CIC_os
+2022-03-28 03:00:22
+Done!

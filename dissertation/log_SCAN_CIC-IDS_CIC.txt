@@ -492,3 +492,9 @@ F1-score for NB: TN = 9132353, FP = 0, FN = 162023, TP = 0
 F1-score for SVM: TN = 9121259, FP = 11094, FN = 162023, TP = 0
 2022-01-18 12:59:23
 F1-score for XGB: TN = 9132353, FP = 0, FN = 162020, TP = 3
+2022-03-13 23:12:10
+setTarget: Removed 397751 flows from other attack types
+2022-03-27 12:07:02
+setTarget: Removed 397751 flows from other attack types
+2022-03-28 03:00:47
+setTarget: Removed 397751 flows from other attack types

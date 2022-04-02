@@ -95,7 +95,7 @@ ALGORITHMS = {
         "class_weight": (None, "balanced")
     }),
 }
-ALGO_KEYS = ["MLP", "SVM", "XGB", "NB", "LR", "DT", "RF"]
+ALGO_KEYS = ["MLP", "SVM", "XGB", "NB", "LR", "DT"]
 algorithms = {key: ALGORITHMS[key] for key in ALGO_KEYS}
 # for type casting at loading time
 #                'flow_duration':'int32', 'flow_byts_s':'int32', 'flow_pkts_s':'int32', 'fwd_pkts_s':'int32', 'bwd_pkts_s':'int32'
@@ -128,6 +128,10 @@ alter = {0:"AB-TRAP", 1:"NB15", 2:"CIC-IDS"} # used in file nameing control
 scatag = "SCAN_"                             # used in file nameing control
 atktag = "ATK_"                              # used in file nameing control
 
+U_SAMPLE = "undersampling"
+O_SAMPLE = "oversampling"
+balanceNaming = {"none":"", U_SAMPLE:"_us", O_SAMPLE:"_os"}
+    
 #setNames = [x for x in setNames.values]
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -316,6 +320,8 @@ def getModelFiles(modelType):
         files = [s for s in files if (scatag not in s)]
     if atktag not in modelType:
         files = [s for s in files if (atktag not in s)]
+    if "_us" not in modelType:
+        files = [s for s in files if ("_us_" not in s)]
     return files
 
 

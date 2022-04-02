@@ -71,20 +71,27 @@ TARGET_LIST = [0, 1, 2, 3, 4, 5]
 #---------#
 
 # Runs experiment for testSet
-def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overwrite=True):
+def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overwrite=True, balance="none"):
 
     #--------------------#
     # LOAD BEST ML MODEL #
     #--------------------#
     
-    DSName = myFunc.getDSName(pNum, dNum, scanOnly, scan)    # get data set name
+    DSName = myFunc.getDSName(pNum, dNum, scanOnly, scan)+myFunc.balanceNaming[balance]    # get data set name
     scorefile = "./dissertation/fscore_b_{0}.csv".format(DSName) # from data set's name get model and f1-score file's path
+    
+    if balance == myFunc.U_SAMPLE:
+        print("Using models with undersampled majority class")
+    if balance == myFunc.O_SAMPLE:
+        print("Oversampling not implemented yet")
+    
     modelList, prep, table, algo = myFunc.loadModel(DSName)
     #myFunc.saveTable( table, '{0}_F1table'.format(DSName),
     #                 'F1 score of each model in the {0} dataset'.format(DSName),
     #                 'f1_valid_{0}'.format(DSName.casefold()) )                         # Update model performance table for tested data set
     if modelList == {}:
         print("model list empty")
+        return(-1)
     # make target list for testing model
     targetList = TARGET_LIST
     if os.path.isfile(scorefile) and no_overwrite:          # if file already exists, load table
@@ -148,6 +155,7 @@ if __name__ == "__main__":
     scanOnly = False
     scan = False
     no_overwrite = False
+    balanceType = "none" # what type of balancing was used on models
     
     # help
     if len(sys.argv) < 4:
@@ -187,7 +195,9 @@ if __name__ == "__main__":
             scanOnly = True # exclude non Scanning\Reconnaissance attacks from data
             print("Target Class: Scanning\\Reconnaissance selected, exclude other attacks from Benign data")
                   
+        if myFunc.U_SAMPLE in sys.argv[4:]:
+            balanceType = myFunc.U_SAMPLE
         
-    runEvaluation(pNum, maxNumFiles, dNum, scanOnly, scan, no_overwrite)
+    runEvaluation(pNum, maxNumFiles, dNum, scanOnly, scan, no_overwrite, balanceType)
     
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

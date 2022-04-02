@@ -1,0 +1,2 @@
+2022-03-28 05:37:04
+training MLP from SCAN_CIC-IDS_CIC_os

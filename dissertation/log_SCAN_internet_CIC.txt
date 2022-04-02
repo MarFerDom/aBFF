@@ -336,3 +336,7 @@ training NB from SCAN_internet_CIC
 training LR from SCAN_internet_CIC
 2022-01-31 12:43:41
 training RF from SCAN_internet_CIC
+2022-03-14 01:14:45
+setTarget: Removed 0 flows from other attack types
+2022-03-27 12:19:15
+setTarget: Removed 0 flows from other attack types
