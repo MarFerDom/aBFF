@@ -64,10 +64,6 @@ def runExperiment(pcapTypeNum, maxNumFiles, datasetTypeNum=1, scanOnly=False, sc
     #----------------------#
     # PREPARE FOR TRAINING #
     #----------------------#
-
-    # AB-TRAP has only scanning attacks
-    #if pcapTypeNum == 0:
-    #    scan = True
     
     # Load training set..             using its own zero variance list
     X, y = myFunc.setTarget(myFunc.loadDataset(pcapTypeNum, maxNumFiles, datasetTypeNum), pcapTypeNum, scanOnly, scan, pcapTypeNum)

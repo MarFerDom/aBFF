@@ -70,15 +70,16 @@ TARGET_LIST = [0, 1, 2, 3, 4, 5]
 #---------#
 
 # Runs experiment for testSet
-def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overwrite=True):
+def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overwrite=True, balance="none"):
 
     #--------------------#
     # LOAD BEST ML MODEL #
     #--------------------#
     
-    DSName = myFunc.getDSName(pNum, dNum, scanOnly, scan)    # get data set name
+    DSName = myFunc.getDSName(pNum, dNum, scanOnly, scan)+myFunc.balanceNaming[balance]    # get data set name
     scorefile = "./dissertation/fscore_{0}.csv".format(DSName) # from data set's name get model and f1-score file's path
     modelList, prep, table, algo = myFunc.loadModel(DSName)
+    # saves F-score table for respective 
     myFunc.saveTable( table, '{0}_F1table'.format(DSName),
                      'F1 score of each model in the {0} dataset'.format(DSName),
                      'f1_valid_{0}'.format(DSName.casefold()) )                         # Update model performance table for tested data set
@@ -117,7 +118,6 @@ def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overw
         for entry in modelList:
             try:
                 score = modelList[entry].score(prep.transform(X),y)
-                print("{0}\'s score = {1}".format(entry, score))
                 line.update( {entry : score} )
                 myFunc.log(DSName, "F1-score for {0}: {1}".format(entry, line[entry]))
             except Exception as e:
@@ -182,8 +182,12 @@ if __name__ == "__main__":
             scanOnly = True # exclude non Scanning\Reconnaissance attacks from data
             print("Target Class: Scanning\\Reconnaissance selected, exclude other attacks from Benign data")
                   
+        if myFunc.U_SAMPLE in sys.argv[4:]:
+            balanceType = myFunc.U_SAMPLE
+        if myFunc.O_SAMPLE in sys.argv[4:]:
+            balanceType = myFunc.O_SAMPLE
         
-    runEvaluation(pNum, maxNumFiles, dNum, scanOnly, scan, no_overwrite)
+    runEvaluation(pNum, maxNumFiles, dNum, scanOnly, scan, no_overwrite, balance=balanceType)
     
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 

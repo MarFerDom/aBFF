@@ -4,7 +4,7 @@
 #
 #
 # Input: models(${PCAP}_${FEATURE_SET}_${ML}_.joblib) testDataset(${PCAP}_${FEATURE_SET}.csv)[list]
-# Ouput: a line for performance table (fscore_${PCAP}_${FEATURE_SET}.csv),
+# Ouput: a line for performance table (fscore_b_${PCAP}_${FEATURE_SET}.csv),
 #        a table of models performance ${PCAP}_${FEATURE_SET}_F1table.tex
 #
 # Discription:
@@ -83,12 +83,10 @@ def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overw
     if balance == myFunc.U_SAMPLE:
         print("Using models with undersampled majority class")
     if balance == myFunc.O_SAMPLE:
-        print("Oversampling not implemented yet")
+        print("Using models with oversampled minority class.")
     
     modelList, prep, table, algo = myFunc.loadModel(DSName)
-    #myFunc.saveTable( table, '{0}_F1table'.format(DSName),
-    #                 'F1 score of each model in the {0} dataset'.format(DSName),
-    #                 'f1_valid_{0}'.format(DSName.casefold()) )                         # Update model performance table for tested data set
+    
     if modelList == {}:
         print("model list empty")
         return(-1)
@@ -126,10 +124,6 @@ def runEvaluation(pNum, maxNumFiles, dNum=1, scanOnly=False, scan=True, no_overw
             try:
                 y_test = modelList[entry].predict(prep.transform(X))
                 score = metrics.confusion_matrix(y,y_test).reshape(4)
-                #indexA = y==1
-                #scoreA = modelList[entry].score(prep.transform(X[indexA]),y[indexA])
-                #scoreB = modelList[entry].score(prep.transform(X[~indexA]),y[~indexA])
-                print("{0}\'s TN = {1}, FP = {2}, FN = {3}, TP = {4}".format(entry, score[0], score[1], score[2], score[3]))
                 line.update( {entry+" TN" : score[0], entry+" FP" : score[1], entry+" FN" : score[2], entry+" TP" : score[3]} )
                 myFunc.log(DSName, "F1-score for {0}: TN = {1}, FP = {2}, FN = {3}, TP = {4}".format(entry, score[0], score[1], score[2], score[3]))
             except Exception as e:
@@ -197,6 +191,8 @@ if __name__ == "__main__":
                   
         if myFunc.U_SAMPLE in sys.argv[4:]:
             balanceType = myFunc.U_SAMPLE
+        if myFunc.O_SAMPLE in sys.argv[4:]:
+            balanceType = myFunc.O_SAMPLE
         
     runEvaluation(pNum, maxNumFiles, dNum, scanOnly, scan, no_overwrite, balanceType)
     

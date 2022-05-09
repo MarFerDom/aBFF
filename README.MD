@@ -31,12 +31,13 @@ M. Sarhan, S. Layeghy, and M. Portmann, An explainable machine learning-based ne
 
 > - `0_get_CIC_from_labels.py`
 > - `1_Extract_Features.sh`
-> - 2_
+> - `2_Build_dataset.ipynb`
+> - `3_train_model.ipynb`
+
 
 ## 0_get_CIC_from_labels.py 
 
-Use CIC label files as "CIC"_CIC.csv in case 
-
+Join CIC-IDS2017 label files as "CIC"_CIC.csv for CIC-IDS2017 case if not extracting directly from PCAP file
 
 
 ## 1_Extract_Features.sh [inputDirectory] 
@@ -51,8 +52,8 @@ Use CIC label files as "CIC"_CIC.csv in case
 
 Creates inner directory per pcap file and runs Argus, Zeek and CICFlowMeter on all PCAP files in current directory.
 
-NOTE_1: For running MAWILab and CIC-IDS through CICFlowMeter it was necessary to force linktype to 1 [EN10MB(Ethernet)] in utils.py as: https://www.tcpdump.org/linktypes.html
-NOTE_2: Remember to edit /home/YOUR_USER/.local/lib/python3.9/site-packages/scapy/utils.py
+### NOTE_1: For running MAWILab and CIC-IDS through CICFlowMeter it was necessary to force linktype to 1 [EN10MB(Ethernet)] in utils.py as: https://www.tcpdump.org/linktypes.html
+### NOTE_2: Remember to edit /home/YOUR_USER/.local/lib/python3.9/site-packages/scapy/utils.py
 
 ```
 import numpy
@@ -69,8 +70,52 @@ GET ALT -> if(): else: linktype = 1
 > Build NB15 and CIC type datasets for each pcap
 > Requires: featuresNB15.py featuresCIC.py
 
+- SupportFils:
+- featuresCIC.py: Sets labels and fixes minor formatting issues in UNBW-NB15;
+- featuresNB15.py: not in use currently.
+
 ## 3_train_model.ipynb
 
-> Train ML models for each dataset
+> Train ML models for each data set.
 > Requires: train_model.py
 
+- SupportFils:
+- train_model.py: Train after loading full data set or building if not found. Under or Oversamples before training if option selected.
+
+## 4_test_model.ipynb
+
+> Evaluate models performance in other data sets available
+> Requires: evaluateBinary.py / evaluate.py
+
+- SupportFils:
+- evaluate.py: For the selected Dataset: [1] save each model's F-score table (k-split training) and [2] evaluate their F-score on other Datasets (fscore_{0}.csv)
+- evaluateBinary.py: For the selected Dataset: [1] save each model's F-score table (k-split training) and [2] evaluate their full confusion matrix on other Datasets (fscore_b_{0}.csv)
+
+## 5_XAI.ipynb  SUPERSEEDED
+
+> Calculate SHAP values and plot feature SHAP mean value and distribution impact on classification graphs
+> Requires: SHAP module
+
+## explain.ipynb
+
+> Calculate SHAP values and plot feature SHAP mean value and distribution impact on classification graphs
+> Requires: SHAP module
+
+- SupportFils:
+- explain.py: calculates SHAP values for one model (algorithm/dataset pair) on one target dataset
+
+## graphs.ipynb
+
+> Build graphs for f-score
+
+## graphs_b.ipynb
+
+> Build graphs for different metrics using confusion matrix (including MCC)
+
+## analyzis.ipynb
+
+> Build feature importance graphs for each model with a personalized method
+
+## featImportance.ipynb
+
+> Build LaTeX tables with importance calculated as explained in analysis.ipynb

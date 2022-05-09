@@ -1,6 +1,16 @@
 # Custom files
 *.pcap
 *csv 
+datasetValidation.ipynb
+*-Copy1.*
+pickleSHAP
+*.rar
+tablesFormatting.ipynb
+testingDatasets.ipynb
+Untitled.ipynb
+controleTarefas.txt
+x backup x/
+x archive x/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

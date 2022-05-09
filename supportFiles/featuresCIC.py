@@ -7,14 +7,14 @@
 # Ouput: (${PCAP}_CIC.csv)
 #
 # Discription:
-# Extract 84 features as in ( et al 2017) from ${PCAP}.pcap file
+# Extract 84 features as in (Sharafaldin et al 2018) from ${PCAP}.pcap file
 #-----------------------------------------------------------------------------------------
 
 
 # DATASET INFO AND PCAP FILE SOURCES
 
 ## CIC-IDS
-### source: https://www.unb.ca/cic/datasets/ids-2017.html
+### source: https://www.unb.ca/cic/datasets/ids-2017.html 
 
 import os
 import sys
@@ -35,12 +35,12 @@ def portsAsInt(x):
     except:
         return np.NaN
 
-## set protocol number by name
+## set protocol number as int by name
 def protoNum(proto):
     trad = {"tcp":6, "udp":17, "ipv4":4, "icmp":1, "igmp":2, "ggp": 3, "ip": 0, "egp": 8, "pup": 12, "hmp": 20,
             "xns-idp": 22, "rdp": 27, "ipv6": 41, "ipv6-frag": 44, "ipv6-route": 43, "rvd": 66, "ipv6-opts": 60, "l2tp": 1701}
     if proto.isnumeric():
-            return int(proto)
+        return int(proto)
     if proto not in trad.keys():
         return np.NaN
     return trad[proto]
@@ -57,20 +57,16 @@ def flowID(dataframe):
  #----------------#
 
 ## get cic.csv, merge/format labels to CIC-IDS dataset.
+### Adds labels, fix label formatting
+### UNB15: (1) has protocol from argus option (NOT USING CURRENTLY), (2) sets port and protocol as int.
 def toCIC(labelType, pcapName, filepath, tuple4=False):   
     
-    print("loading cic.csv from {0}".format(filepath))
     cicfm = pd.read_csv(filepath + "cic.csv", sep=',') # dataset CICFlow Meter
-    #cicfm = cicfm.astype(myFunc.FEATURE_TYPES)
-    print("calculating..")
     cicfm['flow_ID'] = flowID(cicfm)
 
     #--------#
     # LABELS #
     #--------#
-    # src_ip', 'dst_ip', 'src_port', 'dst_port', 'protocol'
-    # loading Labels
-    print("labeling...")
     
     # Bonafide.pcap - all benign
     if labelType == 1:
@@ -81,20 +77,18 @@ def toCIC(labelType, pcapName, filepath, tuple4=False):
         labels = pd.read_csv("./labels/attack_labels.csv",header=0, names=['src_ip', 'Label'])
 
         # insert attack category and label
+        # labels had formatting issues, blanks in weird places
         labels['Label'] = labels['Label'].str.strip()
         cicfm = cicfm.merge(labels,
                       how='inner', #'left', changed due to issue with extra ips on cic and argus files. May be from simulation itself
                       on=['src_ip'])
     
-    ## attack.pcap from internet
-    if labelType == 5:
-        cicfm['Label'] = 'reconnaissance'
         
     # nb15.pcap - NUSW-NB15_GT.csv (Source IP, Destination IP, Source Port, Destination Port, Protocol, Attack category)
     if labelType == 3:
         if tuple4:
             # Use argus file to solve CICFlowMeter's protocol number issue
-            argus = pd.read_csv("./csv/12/argus.csv", usecols=['SrcAddr','DstAddr','Sport','Dport','Proto'],
+            argus = pd.read_csv(filepath+"argus.csv", usecols=['SrcAddr','DstAddr','Sport','Dport','Proto'],
                     dtype={'SrcAddr':'string','DstAddr':'string'},
                     converters={'Proto':protoNum, 'Sport':portsAsInt ,'Dport':portsAsInt}, sep=',') # to fix protocol number in cic
         
@@ -131,13 +125,23 @@ def toCIC(labelType, pcapName, filepath, tuple4=False):
 
         pcapName = "NB15_"+pcapName
         
+        
+    ## CIC.pcap [not implemented yet]
+    if labelType == 4:
+        pass
+    
+    
+    ## attack.pcap from internet
+    if labelType == 5:
+        cicfm['Label'] = 'reconnaissance'
+    
+    # All still not set are Benign
     cicfm.fillna(value={'Label': 'BENIGN'}, inplace=True)
     
     #--------------#
     # SAVE DATASET #
     #--------------#
     
-    print("saving..")
     cicfm.to_csv("./dataset/" + pcapName + '_CIC.csv', index=None, header=True)
     
 if __name__ == "__main__":

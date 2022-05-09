@@ -67,11 +67,12 @@ from sklearn.neighbors import KNeighborsClassifier
 # datasetType 0: UNSW_NB15
 # datasetType 1: CIC-IDS
 ##
+
+# Dictionary of types to filename affixes used in file selection
 pcapType = {0:"output", 1:"NB15_", 2:"WorkingHours", 3:"ToN-IoT", 4:"BoT-IoT", 5:"internet"}
 datasetType = {0:"_NB15.csv", 1:"_CIC.csv"}
 
 # Define ML algorithms
-
 ALGORITHMS = {
     "MLP" : (MLPClassifier(random_state=17), {
         "hidden_layer_sizes" : (10, 10),
@@ -97,10 +98,7 @@ ALGORITHMS = {
 }
 ALGO_KEYS = ["MLP", "SVM", "XGB", "NB", "LR", "DT"]
 algorithms = {key: ALGORITHMS[key] for key in ALGO_KEYS}
-# for type casting at loading time
-#                'flow_duration':'int32', 'flow_byts_s':'int32', 'flow_pkts_s':'int32', 'fwd_pkts_s':'int32', 'bwd_pkts_s':'int32'
-#                'flow_iat_max':'int32','flow_iat_min':'int32', 'fwd_iat_tot':'int32', 'fwd_iat_max':'int32', 'fwd_iat_min':'int32',
-#                'bwd_iat_tot':'int32', 'bwd_iat_max':'int32','bwd_iat_min':'int32', 'active_max':'int32', 'active_min':'int32',
+
 FEATURE_TYPES = {'flow_duration':'float32', 'flow_byts_s':'float32', 'flow_pkts_s':'float32', 'fwd_pkts_s':'float32', 'bwd_pkts_s':'float32',
                  'fwd_pkt_len_max':'int32', 'fwd_pkt_len_min':'int32', 'bwd_pkt_len_max':'int32', 'bwd_pkt_len_min':'int32',
                  'flow_iat_max':'float32','flow_iat_min':'float32', 'fwd_iat_tot':'float32', 'fwd_iat_max':'float32', 'fwd_iat_min':'float32', 
@@ -124,15 +122,13 @@ FEATURE_TYPES = {'flow_duration':'float32', 'flow_byts_s':'float32', 'flow_pkts_
 ID_FEATURES = ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip'] # removed with the zero variance features
 ALL_ID = ['timestamp','flow_ID', 'src_port', 'src_ip', 'dst_ip', 'dst_port']
 
-alter = {0:"AB-TRAP", 1:"NB15", 2:"CIC-IDS"} # used in file nameing control
-scatag = "SCAN_"                             # used in file nameing control
-atktag = "ATK_"                              # used in file nameing control
+alter = {0:"AB-TRAP", 1:"NB15", 2:"CIC-IDS"} # used in file naming control
+scatag = "SCAN_"                             # used in file naming control
+atktag = "ATK_"                              # used in file naming control
 
 U_SAMPLE = "undersampling"
 O_SAMPLE = "oversampling"
-balanceNaming = {"none":"", U_SAMPLE:"_us", O_SAMPLE:"_os"}
-    
-#setNames = [x for x in setNames.values]
+balanceNaming = {"none":"", U_SAMPLE:"_us", O_SAMPLE:"_os"} # used in file naming control
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -238,7 +234,6 @@ def saveTable(table, tableName, mycaption, mylabel):
 
 ## fix for ToN-IoT and BoT-IoT and rogue white spaces
 def standardCICFeatureName(features):
-    #alvo.columns
     columns = features.to_series().apply(lambda x: x.strip().replace(" ","_").replace("/","_").casefold())
     columns[columns == "flow_id"] = 'flow_ID'
     columns[columns == "label"] = 'Label'
@@ -322,6 +317,8 @@ def getModelFiles(modelType):
         files = [s for s in files if (atktag not in s)]
     if "_us" not in modelType:
         files = [s for s in files if ("_us_" not in s)]
+    if "_os" not in modelType:
+        files = [s for s in files if ("_os_" not in s)]
     return files
 
 
@@ -411,7 +408,7 @@ def loadAndSet(DSName, zeroVarType):
 # TO_DO: None
 
 ##
-# Returns Load or builds required data set, fixing labels and removeing bad lines
+# Returns Loaded or builds required data set, fixing labels and removeing bad lines
 #
 # INPUT: pNum        [pcap source number: 0 to 4],
 #        maxNumFiles [maximum number of files to load, int],
