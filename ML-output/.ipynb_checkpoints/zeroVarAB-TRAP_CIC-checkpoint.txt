@@ -1,4 +1,0 @@
-['fwd_psh_flags' 'bwd_psh_flags' 'fwd_urg_flags' 'bwd_urg_flags'
- 'syn_flag_cnt' 'rst_flag_cnt' 'psh_flag_cnt' 'ack_flag_cnt'
- 'urg_flag_cnt' 'ece_flag_cnt' 'cwe_flag_count' 'timestamp' 'flow_ID'
- 'src_port' 'src_ip' 'dst_ip']
